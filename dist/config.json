@@ -1,5 +1,5 @@
 {
-    "server_route": "http://localhost",
+    "server_route": "https://pixcrate.herokuapp.com",
     "default_port": 80,
     "database_route": "mongodb://localhost",
     "database_port": 27017,

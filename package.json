@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Basic MEAN API",
   "main": "dist/bootstrapper.js",
+  "engines": {
+    "node": "12.13.0"
+  },
   "dependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "^1.17.1",
