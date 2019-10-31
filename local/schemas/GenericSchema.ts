@@ -1,4 +1,4 @@
-import { Schema, Model, Document } from "mongoose";
+import { Schema } from "mongoose";
 import IGenericSchema from "./IGenericSchema";
 import { getRequirements } from "../decorators/Requirements";
 
