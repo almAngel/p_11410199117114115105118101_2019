@@ -38,6 +38,6 @@
     "serve": "npm run build && node dist/bootstrapper.js",
     "live": "nodemon -e ts,json --exec \"npm run serve\""
   },
-  "author": "",
+  "author": "Ángel López Molina",
   "license": "ISC"
 }
