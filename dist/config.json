@@ -1,0 +1,8 @@
+{
+    "server_route": "http://localhost",
+    "default_port": 80,
+    "database_route": "mongodb://localhost",
+    "database_port": 27017,
+    "database_name": "mydb",
+    "controllers_path": "/controllers"
+}
