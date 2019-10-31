@@ -2,7 +2,7 @@
   "name": "bapi",
   "version": "1.0.0",
   "description": "Basic MEAN API",
-  "main": "bootstrapper.ts",
+  "main": "dist/bootstrapper.js",
   "dependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "^1.17.1",
