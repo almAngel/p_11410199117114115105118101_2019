@@ -13,6 +13,15 @@ export class HomeController extends AbstractController {
         super();
     }
 
+    @GET({ path:"/hello" })
+    public async hello() {
+        let response;
+        response = {
+            msg: "Hello World!!"
+        }
+        handledSend(response);
+    }
+
     @GET({ path: "/access", produces: ContenType.APP_JSON})
     public async getAccessToken() {
         let response;

@@ -32,6 +32,15 @@ let HomeController = class HomeController extends AbstractController_1.AbstractC
     constructor() {
         super();
     }
+    hello() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            response = {
+                msg: "Hello World!!"
+            };
+            Tools_1.handledSend(response);
+        });
+    }
     getAccessToken() {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
@@ -47,6 +56,12 @@ let HomeController = class HomeController extends AbstractController_1.AbstractC
         });
     }
 };
+__decorate([
+    GET_1.GET({ path: "/hello" }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], HomeController.prototype, "hello", null);
 __decorate([
     GET_1.GET({ path: "/access", produces: ContentType_1.ContenType.APP_JSON }),
     __metadata("design:type", Function),
