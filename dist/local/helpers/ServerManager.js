@@ -13,7 +13,7 @@ class ServerManager {
         this.instance.use(body_parser_1.default.json());
         this.instance.use(body_parser_1.default.urlencoded({ extended: true }));
         this.instance.use(cors_1.default());
-        this.instance.listen(this.cfg.default_port || 3000, () => {
+        this.instance.listen(process.env.PORT || this.cfg.default_port, () => {
             console.log("Server initialized at port " + this.cfg.server_route + ":" + this.cfg.default_port);
         })
             .on("error", () => {
