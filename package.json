@@ -34,7 +34,7 @@
     "typescript": "^3.6.3"
   },
   "scripts": {
-    "start": "node dist/bootstrapper.js",
+    "start": "PORT=80 node dist/bootstrapper.js",
     "test": "mocha bootstrapper.js",
     "cover": "nyc --reporter=text mocha",
     "build": "tsc",

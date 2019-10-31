@@ -9,6 +9,8 @@ export class ServerManager {
 
     public static init() {
 
+        console.log(process.env);
+        
         this.instance.use(bodyParser.json());
         this.instance.use(bodyParser.urlencoded({ extended: true }));
         this.instance.use(cors());

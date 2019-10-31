@@ -9,10 +9,11 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 class ServerManager {
     static init() {
+        console.log(process.env);
         this.instance.use(body_parser_1.default.json());
         this.instance.use(body_parser_1.default.urlencoded({ extended: true }));
         this.instance.use(cors_1.default());
-        this.instance.listen(this.cfg.default_port, () => {
+        this.instance.listen(this.cfg.default_port || 3000, () => {
             console.log("Server initialized at port " + this.cfg.server_route + ":" + this.cfg.default_port);
         })
             .on("error", () => {
