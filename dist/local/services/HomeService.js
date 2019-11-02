@@ -18,6 +18,7 @@ const DatabaseManager_1 = require("../helpers/DatabaseManager");
 const TokenManager_1 = __importDefault(require("../helpers/TokenManager"));
 const Tools_1 = require("../helpers/Tools");
 const AbstractController_1 = require("../controllers/AbstractController");
+const AuthBundleSchema_1 = require("../schemas/AuthBundleSchema");
 class HomeService {
     constructor() { }
     static getAccessToken() {
@@ -26,6 +27,7 @@ class HomeService {
             let token, ref_token;
             let matches;
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
+            this.authBundleDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
             this.requestBody = {
                 email: AbstractController_1.AbstractController.metadata("request").body.email,
                 password: AbstractController_1.AbstractController.metadata("request").body.password

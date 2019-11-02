@@ -21,6 +21,7 @@ export default class HomeService {
 
         //Create DAO
         this.userDAO = new GenericDAO(UserSchema);
+        this.authBundleDAO = new GenericDAO(AuthBundleSchema);
 
         //Sift our request body
         this.requestBody = {
