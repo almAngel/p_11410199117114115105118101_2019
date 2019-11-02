@@ -4,17 +4,19 @@ import { DatabaseManager } from "../helpers/DatabaseManager";
 import TokenManager from "../helpers/TokenManager";
 import { hash, checkHash } from "../helpers/Tools";
 import { AbstractController } from "../controllers/AbstractController";
+import { AuthBundleSchema } from "../schemas/AuthBundleSchema";
 
 export default class HomeService {
 
     private static requestBody: any;
     private static userDAO: GenericDAO<UserSchema>;
+    private static authBundleDAO: GenericDAO<AuthBundleSchema>;
 
     private constructor() { }
 
     public static async getAccessToken() {
         let response: any;
-        let token: string;
+        let token, ref_token: string;
         let matches: boolean;
 
         //Create DAO
@@ -33,7 +35,7 @@ export default class HomeService {
 
         try {
             matches = checkHash(AbstractController.metadata("request").body.password, response.password);
-        } catch(e) {
+        } catch (e) {
             response = {
                 msg: "Error: Missing required body field",
                 status: 422
@@ -43,11 +45,18 @@ export default class HomeService {
 
         if (matches) {
 
+            ref_token = TokenManager.encode({});
+
             token = TokenManager.encode(
                 {
-                    id: response._id,
-                    email: AbstractController.metadata("request").body.email,
-                    username: response.username,
+                    ref_token: ref_token
+                }
+            );
+
+            await this.authBundleDAO.saveOrUpdate(
+                {
+                    ref_token: ref_token,
+                    u_id: response._id
                 }
             );
 
