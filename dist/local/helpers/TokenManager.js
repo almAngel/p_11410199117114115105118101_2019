@@ -7,19 +7,18 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const fs_1 = __importDefault(require("fs"));
 class TokenManager {
     static encode(data) {
-        return jsonwebtoken_1.default.sign(data, fs_1.default.readFileSync("./private.key"), { algorithm: 'HS256' });
+        return jsonwebtoken_1.default.sign(data, fs_1.default.readFileSync("./private.key", 'utf8'), { algorithm: 'RS256', expiresIn: '10min' });
     }
     static decode(token) {
         return jsonwebtoken_1.default.decode(token, { json: true });
     }
     static verify(token) {
-        return jsonwebtoken_1.default.verify(token, fs_1.default.readFileSync("./private.key"), { algorithms: ['HS256'] });
+        return jsonwebtoken_1.default.verify(token, fs_1.default.readFileSync("./public.key", 'utf8'), { algorithms: ['RS256'] });
     }
-    static checkExpiration(token) {
+    static expired(token) {
         let decoded = Object(this.verify(token));
         let expired = false;
-        console.log(decoded.expires);
-        if (Date.now >= decoded.expires) {
+        if (Math.floor(Date.now() / 1000) >= decoded.exp) {
             expired = true;
         }
         return expired;
