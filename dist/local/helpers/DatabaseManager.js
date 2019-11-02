@@ -33,6 +33,6 @@ class DatabaseManager {
 }
 exports.DatabaseManager = DatabaseManager;
 DatabaseManager.instance = mongoose_1.default;
-DatabaseManager.url = config_json_1.default.database_route + ":" + config_json_1.default.database_port + "/" + config_json_1.default.database_name;
+DatabaseManager.url = config_json_1.default.database_route;
 DatabaseManager.date = new Date();
 //# sourceMappingURL=DatabaseManager.js.map
