@@ -15,7 +15,8 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
 
         descriptor.value = function (...args: any[]) {
             let finalPath = String(args[0] + path).replace("//", "/");
-
+            console.log("Final Path" + finalPath);
+            
             result = ServerManager.getInstance().get(finalPath, (req: any, res: any, next: any) => {
                 //Response reset
                 response = "";

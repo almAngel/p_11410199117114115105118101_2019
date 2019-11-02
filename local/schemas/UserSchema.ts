@@ -19,9 +19,9 @@ export class UserSchema extends GenericSchema {
     public surname: string = "";
     @Requirements({ type: Number, trim: true })
     public age = 0;
-    @Requirements({ type: String})
+    @Requirements({ type: String })
     public access_token = "";
-    @Requirements({ type: Boolean})
+    @Requirements({ type: Boolean })
     public confirmed = false;
 
     public getSchemaDefinition() {

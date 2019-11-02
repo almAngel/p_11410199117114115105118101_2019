@@ -16,7 +16,7 @@ export class ServerManager {
         this.instance.use(cors());
 
         this.instance.listen(process.env.PORT || this.cfg.default_port, () => {
-            console.log("Server initialized at port " + this.cfg.server_route + ":" + this.cfg.default_port);
+            console.log("Server initialized at port " + this.cfg.server_route + ":" + process.env.PORT);
         })
         .on("error", () => {
             console.log("Error: Couldn't start a new server");
