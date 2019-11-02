@@ -1,10 +1,11 @@
-import { RestController } from "../decorators/RestController";
+
 import { AbstractController } from "./AbstractController";
 import { ContenType } from "../enum/ContentType";
 import HomeService from "../services/HomeService";
 import { handledSend } from "../helpers/Tools";
 import { GET } from "../decorators/httpverbs/GET";
 import { POST } from "../decorators/httpverbs/POST";
+import { RestController } from "../decorators/RestController";
 
 @RestController("/home")
 export class HomeController extends AbstractController {

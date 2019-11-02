@@ -21,13 +21,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const RestController_1 = require("../decorators/RestController");
 const AbstractController_1 = require("./AbstractController");
 const ContentType_1 = require("../enum/ContentType");
 const HomeService_1 = __importDefault(require("../services/HomeService"));
 const Tools_1 = require("../helpers/Tools");
 const GET_1 = require("../decorators/httpverbs/GET");
 const POST_1 = require("../decorators/httpverbs/POST");
+const RestController_1 = require("../decorators/RestController");
 let HomeController = class HomeController extends AbstractController_1.AbstractController {
     constructor() {
         super();
