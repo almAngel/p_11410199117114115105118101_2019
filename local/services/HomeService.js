@@ -18,14 +18,16 @@ const DatabaseManager_1 = require("../helpers/DatabaseManager");
 const TokenManager_1 = __importDefault(require("../helpers/TokenManager"));
 const Tools_1 = require("../helpers/Tools");
 const AbstractController_1 = require("../controllers/AbstractController");
+const AuthBundleSchema_1 = require("../schemas/AuthBundleSchema");
 class HomeService {
     constructor() { }
     static getAccessToken() {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
-            let token, ref_token;
+            let access_token, ref_token;
             let matches;
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
+            this.authBundleDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
             this.requestBody = {
                 email: AbstractController_1.AbstractController.metadata("request").body.email,
                 password: AbstractController_1.AbstractController.metadata("request").body.password
@@ -44,21 +46,26 @@ class HomeService {
                 return response;
             }
             if (matches) {
-                ref_token = TokenManager_1.default.encode({});
-                token = TokenManager_1.default.encode({
-                    ref_token: ref_token
+                ref_token = TokenManager_1.default.encode({
+                    data: {}
+                });
+                access_token = TokenManager_1.default.encode({
+                    data: {
+                        refToken: ref_token
+                    },
+                    expirationTime: "10min"
                 });
                 yield this.authBundleDAO.saveOrUpdate({
-                    ref_token: ref_token,
-                    u_id: response._id
+                    refToken: ref_token,
+                    uId: response._id
                 });
                 response = yield this.userDAO.saveOrUpdate({
-                    access_token: token
+                    access_token: access_token
                 }, response._id);
             }
             DatabaseManager_1.DatabaseManager.disconnect();
             return {
-                access_token: token
+                access_token: access_token
             };
         });
     }

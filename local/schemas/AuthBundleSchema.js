@@ -25,10 +25,10 @@ class AuthBundleSchema extends GenericSchema_1.default {
 __decorate([
     Requirements_1.Requirements({ required: true, unique: true, type: String }),
     __metadata("design:type", String)
-], AuthBundleSchema.prototype, "ref_token", void 0);
+], AuthBundleSchema.prototype, "refToken", void 0);
 __decorate([
     Requirements_1.Requirements({ required: true, unique: true, type: String }),
     __metadata("design:type", String)
-], AuthBundleSchema.prototype, "u_id", void 0);
+], AuthBundleSchema.prototype, "uId", void 0);
 exports.AuthBundleSchema = AuthBundleSchema;
 //# sourceMappingURL=AuthBundleSchema.js.map
