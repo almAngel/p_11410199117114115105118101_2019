@@ -33,16 +33,19 @@ export default class HomeService {
         let matches = checkHash(AbstractController.metadata("request").body.password, response.password);
 
         if (matches) {
+
+            let generateTimestamp = () => {
+                let extraMins = 600000; // in milliseconds
+                let expirationTimestamp = Date.now() + extraMins;
+                return expirationTimestamp;
+            }
+
             token = TokenManager.encode(
                 {
                     id: response._id,
                     email: AbstractController.metadata("request").body.email,
                     username: response.username,
-                    expires: () => {
-                        let extraMins = 600000; // in milliseconds
-                        let expirationTimestamp = Date.now() + extraMins;
-                        return expirationTimestamp;
-                    }
+                    expires: generateTimestamp()
                 }
             );
             response = await this.userDAO.saveOrUpdate(
