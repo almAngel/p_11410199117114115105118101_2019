@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 
 export class DatabaseManager {
     private static readonly instance = mongoose;
-    private static readonly url: string = config.database_route + ":" + config.database_port + "/" + config.database_name;
+    //private static readonly url: string = config.database_route + ":" + config.database_port + "/" + config.database_name;
+    private static readonly url: string = config.database_route;
     private static readonly date: Date = new Date();
 
     public static connect() {
