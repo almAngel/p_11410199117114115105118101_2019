@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const GenericSchema_1 = __importDefault(require("./GenericSchema"));
 const Requirements_1 = require("../decorators/Requirements");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 class UserSchema extends GenericSchema_1.default {
     constructor() {
         super();
@@ -24,17 +23,11 @@ class UserSchema extends GenericSchema_1.default {
         this.name = "";
         this.surname = "";
         this.age = 0;
-        this.accessToken = "";
+        this.access_token = "";
         this.confirmed = false;
     }
     getSchemaDefinition() {
         return super.getSchemaDefinition(this);
-    }
-    static hashPassword(pass) {
-        return bcrypt_1.default.hashSync(pass, bcrypt_1.default.genSaltSync());
-    }
-    static checkHash(decrypted, encrypted) {
-        return bcrypt_1.default.compareSync(decrypted, encrypted);
     }
 }
 __decorate([
@@ -64,7 +57,7 @@ __decorate([
 __decorate([
     Requirements_1.Requirements({ type: String }),
     __metadata("design:type", Object)
-], UserSchema.prototype, "accessToken", void 0);
+], UserSchema.prototype, "access_token", void 0);
 __decorate([
     Requirements_1.Requirements({ type: Boolean }),
     __metadata("design:type", Object)

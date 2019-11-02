@@ -17,6 +17,7 @@ const UserSchema_1 = require("../schemas/UserSchema");
 const GenericDAO_1 = require("../schemas/dao/GenericDAO");
 const DatabaseManager_1 = require("../helpers/DatabaseManager");
 const TokenManager_1 = __importDefault(require("../helpers/TokenManager"));
+const Tools_1 = require("../helpers/Tools");
 class HomeService {
     constructor() { }
     static getAccessToken() {
@@ -31,21 +32,25 @@ class HomeService {
             response = yield this.userDAO.load({
                 email: this.requestBody.email
             });
-            let matches = UserSchema_1.UserSchema.checkHash(AbstractController_1.AbstractController.metadata("request").body.password, response.password);
+            let matches = Tools_1.checkHash(AbstractController_1.AbstractController.metadata("request").body.password, response.password);
             if (matches) {
                 token = TokenManager_1.default.encode({
                     id: response._id,
                     email: AbstractController_1.AbstractController.metadata("request").body.email,
                     username: response.username,
-                    created_timestamp: Date.now()
+                    expires: () => {
+                        let extraMins = 600000;
+                        let expirationTimestamp = Date.now() + extraMins;
+                        return expirationTimestamp;
+                    }
                 });
                 response = yield this.userDAO.saveOrUpdate({
-                    accessToken: token
+                    access_token: token
                 }, response._id);
             }
             DatabaseManager_1.DatabaseManager.disconnect();
             return {
-                accessToken: token
+                access_token: token
             };
         });
     }
@@ -54,7 +59,7 @@ class HomeService {
             let response;
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
             this.requestBody = AbstractController_1.AbstractController.metadata("request").body;
-            this.requestBody.password = UserSchema_1.UserSchema.hashPassword(this.requestBody.password);
+            this.requestBody.password = Tools_1.hash(this.requestBody.password);
             response = yield this.userDAO.saveOrUpdate(this.requestBody);
             DatabaseManager_1.DatabaseManager.disconnect();
             return response;
