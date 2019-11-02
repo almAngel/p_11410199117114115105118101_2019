@@ -1,5 +1,8 @@
 {
     "server_route": "https://pixcrate.herokuapp.com",
     "default_port": "12685",
-    "controllers_path": "/controllers"
+    "controllers_path": "/controllers",
+    "database_route": "mongodb://localhost",
+    "database_port": 27017,
+    "database_name": "mydb"
 }
