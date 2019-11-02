@@ -34,17 +34,18 @@ class HomeService {
             });
             let matches = Tools_1.checkHash(AbstractController_1.AbstractController.metadata("request").body.password, response.password);
             if (matches) {
-                let generateTimestamp = () => {
+                let setExpirationTimeStamp = () => {
                     let extraMins = 600000;
-                    let expirationTimestamp = Date.now() + extraMins;
+                    let expirationTimestamp = Math.floor((Date.now() + extraMins) / 100);
                     return expirationTimestamp;
                 };
                 token = TokenManager_1.default.encode({
                     id: response._id,
                     email: AbstractController_1.AbstractController.metadata("request").body.email,
                     username: response.username,
-                    expires: generateTimestamp()
+                    expires: setExpirationTimeStamp()
                 });
+                console.log(TokenManager_1.default.checkExpiration(token));
                 response = yield this.userDAO.saveOrUpdate({
                     access_token: token
                 }, response._id);

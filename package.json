@@ -41,7 +41,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "serve": "npm run build && node dist/bootstrapper.js",
-    "live": "nodemon -e ts,json --exec \"npm run serve\""
+    "live": "nodemon -e ts,json --exec \"npm run build && ts-node bootstrapper.ts\""
   },
   "author": "Ángel López Molina",
   "license": "ISC"

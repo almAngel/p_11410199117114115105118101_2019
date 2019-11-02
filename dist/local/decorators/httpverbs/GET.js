@@ -16,7 +16,6 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
         originalMethod = descriptor.value;
         descriptor.value = function (...args) {
             let finalPath = String(args[0] + path).replace("//", "/");
-            console.log("Final Path" + finalPath);
             result = ServerManager_1.ServerManager.getInstance().get(finalPath, (req, res, next) => {
                 response = "";
                 res.setHeader("Content-type", produces);

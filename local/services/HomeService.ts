@@ -15,6 +15,7 @@ export default class HomeService {
     public static async getAccessToken() {
         let response: any;
         let token: string;
+        let matches: boolean;
 
         //Create DAO
         this.userDAO = new GenericDAO(UserSchema);
@@ -30,24 +31,26 @@ export default class HomeService {
             email: this.requestBody.email
         });
 
-        let matches = checkHash(AbstractController.metadata("request").body.password, response.password);
+        try {
+            matches = checkHash(AbstractController.metadata("request").body.password, response.password);
+        } catch(e) {
+            response = {
+                msg: "Error: Missing required body field",
+                status: 422
+            }
+            return response;
+        }
 
         if (matches) {
-
-            let generateTimestamp = () => {
-                let extraMins = 600000; // in milliseconds
-                let expirationTimestamp = Date.now() + extraMins;
-                return expirationTimestamp;
-            }
 
             token = TokenManager.encode(
                 {
                     id: response._id,
                     email: AbstractController.metadata("request").body.email,
                     username: response.username,
-                    expires: generateTimestamp()
                 }
             );
+
             response = await this.userDAO.saveOrUpdate(
                 {
                     access_token: token

@@ -8,8 +8,6 @@ export class ServerManager {
     private static readonly cfg = config;
 
     public static init() {
-
-        console.log(process.env);
         
         this.instance.use(bodyParser.json());
         this.instance.use(bodyParser.urlencoded({ extended: true }));

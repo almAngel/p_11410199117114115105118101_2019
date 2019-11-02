@@ -24,6 +24,7 @@ class HomeService {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             let token;
+            let matches;
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
             this.requestBody = {
                 email: AbstractController_1.AbstractController.metadata("request").body.email,
@@ -32,18 +33,21 @@ class HomeService {
             response = yield this.userDAO.load({
                 email: this.requestBody.email
             });
-            let matches = Tools_1.checkHash(AbstractController_1.AbstractController.metadata("request").body.password, response.password);
-            if (matches) {
-                let generateTimestamp = () => {
-                    let extraMins = 600000;
-                    let expirationTimestamp = Date.now() + extraMins;
-                    return expirationTimestamp;
+            try {
+                matches = Tools_1.checkHash(AbstractController_1.AbstractController.metadata("request").body.password, response.password);
+            }
+            catch (e) {
+                response = {
+                    msg: "Error: Missing required body field",
+                    status: 422
                 };
+                return response;
+            }
+            if (matches) {
                 token = TokenManager_1.default.encode({
                     id: response._id,
                     email: AbstractController_1.AbstractController.metadata("request").body.email,
                     username: response.username,
-                    expires: generateTimestamp()
                 });
                 response = yield this.userDAO.saveOrUpdate({
                     access_token: token

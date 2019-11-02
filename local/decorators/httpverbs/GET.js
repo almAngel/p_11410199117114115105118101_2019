@@ -16,7 +16,6 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
         originalMethod = descriptor.value;
         descriptor.value = function (...args) {
             let finalPath = String(args[0] + path).replace("//", "/");
-            console.log("Final Path" + finalPath);
             result = ServerManager_1.ServerManager.getInstance().get(finalPath, (req, res, next) => {
                 response = "";
                 res.setHeader("Content-type", produces);
@@ -24,14 +23,14 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                     let token = req.header("px-token");
                     if (token) {
                         try {
-                            if (TokenManager_1.default.verify(token) != undefined) {
+                            if (!TokenManager_1.default.expired(token)) {
                                 AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
                             }
                         }
                         catch (e) {
                             response = {
-                                msg: "Error: Malformed access token",
-                                status: 400
+                                msg: "Error: Malformed or expired access token",
+                                status: 403
                             };
                         }
                     }

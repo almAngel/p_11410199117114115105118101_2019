@@ -14,7 +14,7 @@ export class HomeController extends AbstractController {
         super();
     }
 
-    @GET({ path:"/hello", produces: ContenType.APP_JSON })
+    @GET({ path:"/hello", produces: ContenType.APP_JSON, sealed: true })
     public async hello() {
         let response;
         response = {
