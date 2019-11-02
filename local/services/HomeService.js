@@ -23,7 +23,7 @@ class HomeService {
     static getAccessToken() {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
-            let token;
+            let token, ref_token;
             let matches;
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
             this.requestBody = {
@@ -44,10 +44,13 @@ class HomeService {
                 return response;
             }
             if (matches) {
+                ref_token = TokenManager_1.default.encode({});
                 token = TokenManager_1.default.encode({
-                    id: response._id,
-                    email: AbstractController_1.AbstractController.metadata("request").body.email,
-                    username: response.username,
+                    ref_token: ref_token
+                });
+                yield this.authBundleDAO.saveOrUpdate({
+                    ref_token: ref_token,
+                    u_id: response._id
                 });
                 response = yield this.userDAO.saveOrUpdate({
                     access_token: token
