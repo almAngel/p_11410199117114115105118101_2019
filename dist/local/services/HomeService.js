@@ -37,6 +37,7 @@ class HomeService {
                     id: response._id,
                     email: AbstractController_1.AbstractController.metadata("request").body.email,
                     username: response.username,
+                    created_timestamp: Date.now()
                 });
                 response = yield this.userDAO.saveOrUpdate({
                     accessToken: token

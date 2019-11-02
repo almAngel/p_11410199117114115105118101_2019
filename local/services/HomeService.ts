@@ -37,6 +37,7 @@ export default class HomeService {
                     id: response._id,
                     email: AbstractController.metadata("request").body.email,
                     username: response.username,
+                    created_timestamp: Date.now()
                 }
             );
             response = await this.userDAO.saveOrUpdate(
