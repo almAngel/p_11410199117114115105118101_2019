@@ -24,7 +24,7 @@ class HomeService {
     static getAccessToken() {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
-            let token, ref_token;
+            let access_token, ref_token;
             let matches;
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
             this.authBundleDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
@@ -47,10 +47,12 @@ class HomeService {
             }
             if (matches) {
                 ref_token = TokenManager_1.default.encode({
-                    data: ""
+                    data: {}
                 });
-                token = TokenManager_1.default.encode({
-                    data: ref_token,
+                access_token = TokenManager_1.default.encode({
+                    data: {
+                        ref_token: ref_token
+                    },
                     expirationTime: "10min"
                 });
                 yield this.authBundleDAO.saveOrUpdate({
@@ -58,12 +60,12 @@ class HomeService {
                     u_id: response._id
                 });
                 response = yield this.userDAO.saveOrUpdate({
-                    access_token: token
+                    access_token: access_token
                 }, response._id);
             }
             DatabaseManager_1.DatabaseManager.disconnect();
             return {
-                access_token: token
+                access_token: access_token
             };
         });
     }

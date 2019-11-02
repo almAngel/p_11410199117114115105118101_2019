@@ -16,7 +16,7 @@ export default class HomeService {
 
     public static async getAccessToken() {
         let response: any;
-        let token, ref_token: string;
+        let access_token, ref_token: string;
         let matches: boolean;
 
         //Create DAO
@@ -46,15 +46,20 @@ export default class HomeService {
 
         if (matches) {
 
+            //REF_TOKEN
             ref_token = TokenManager.encode({
-                data: ""
+                data: {}
             });
 
-            token = TokenManager.encode({
-                data: ref_token,
+            //REF_TOKEN INSIDE TOKEN
+            access_token = TokenManager.encode({
+                data: { 
+                    ref_token: ref_token 
+                },
                 expirationTime: "10min"
             });
 
+            //ASSOCIATE REF_TOKEN AND USER ID
             await this.authBundleDAO.saveOrUpdate(
                 {
                     ref_token: ref_token,
@@ -64,7 +69,7 @@ export default class HomeService {
 
             response = await this.userDAO.saveOrUpdate(
                 {
-                    access_token: token
+                    access_token: access_token
                 }
                 , response._id
             );
@@ -73,7 +78,7 @@ export default class HomeService {
         DatabaseManager.disconnect();
 
         return {
-            access_token: token
+            access_token: access_token
         };
     }
     public static async registerUser() {
