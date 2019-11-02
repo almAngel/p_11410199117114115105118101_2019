@@ -7,7 +7,14 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const fs_1 = __importDefault(require("fs"));
 class TokenManager {
     static encode({ data, expirationTime = undefined }) {
-        return jsonwebtoken_1.default.sign(data, fs_1.default.readFileSync("./private.key", 'utf8'), { algorithm: 'RS256', expiresIn: expirationTime });
+        let result;
+        if (expirationTime != undefined) {
+            result = jsonwebtoken_1.default.sign(data, fs_1.default.readFileSync("./private.key", 'utf8'), { algorithm: 'RS256', expiresIn: expirationTime });
+        }
+        else {
+            result = jsonwebtoken_1.default.sign(data, fs_1.default.readFileSync("./private.key", 'utf8'), { algorithm: 'RS256' });
+        }
+        return result;
     }
     static decode(token) {
         return jsonwebtoken_1.default.decode(token, { json: true });
