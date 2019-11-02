@@ -57,7 +57,7 @@ let HomeController = class HomeController extends AbstractController_1.AbstractC
     }
 };
 __decorate([
-    GET_1.GET({ path: "/hello", produces: ContentType_1.ContenType.APP_JSON }),
+    GET_1.GET({ path: "/hello" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

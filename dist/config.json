@@ -1,8 +1,16 @@
 {
     "server_route": "https://pixcrate.herokuapp.com",
+<<<<<<< HEAD
     "default_port": "12685",
     "controllers_path": "/controllers",
     "database_route": "mongodb://localhost",
     "database_port": 27017,
     "database_name": "mydb"
+=======
+    "default_port": 11278,
+    "database_route": "mongodb://localhost",
+    "database_port": 27017,
+    "database_name": "mydb",
+    "controllers_path": "/controllers"
+>>>>>>> parent of 4b1b476... tweaking related with mongodb
 }
