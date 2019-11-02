@@ -46,13 +46,14 @@ export default class HomeService {
 
         if (matches) {
 
-            ref_token = TokenManager.encode({});
+            ref_token = TokenManager.encode({
+                data: {}
+            });
 
-            token = TokenManager.encode(
-                {
-                    ref_token: ref_token
-                }
-            );
+            token = TokenManager.encode({
+                data: { ref_token: ref_token }, 
+                expirationTime: "10min"
+            });
 
             await this.authBundleDAO.saveOrUpdate(
                 {

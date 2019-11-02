@@ -46,9 +46,12 @@ class HomeService {
                 return response;
             }
             if (matches) {
-                ref_token = TokenManager_1.default.encode({});
+                ref_token = TokenManager_1.default.encode({
+                    data: {}
+                });
                 token = TokenManager_1.default.encode({
-                    ref_token: ref_token
+                    data: { ref_token: ref_token },
+                    expirationTime: "10min"
                 });
                 yield this.authBundleDAO.saveOrUpdate({
                     ref_token: ref_token,
