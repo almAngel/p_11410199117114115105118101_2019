@@ -47,11 +47,11 @@ export default class HomeService {
         if (matches) {
 
             ref_token = TokenManager.encode({
-                data: {}
+                data: ""
             });
 
             token = TokenManager.encode({
-                data: { ref_token: ref_token }, 
+                data: ref_token,
                 expirationTime: "10min"
             });
 
