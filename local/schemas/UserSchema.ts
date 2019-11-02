@@ -1,6 +1,5 @@
 import GenericSchema from "./GenericSchema";
 import { Requirements } from "../decorators/Requirements";
-import bcrypt from "bcrypt";
 
 export class UserSchema extends GenericSchema {
 
@@ -21,19 +20,11 @@ export class UserSchema extends GenericSchema {
     @Requirements({ type: Number, trim: true })
     public age = 0;
     @Requirements({ type: String})
-    public accessToken = "";
+    public access_token = "";
     @Requirements({ type: Boolean})
     public confirmed = false;
 
     public getSchemaDefinition() {
         return super.getSchemaDefinition(this);
     }    
-
-    public static hashPassword(pass: string) {
-        return bcrypt.hashSync(pass, bcrypt.genSaltSync());
-    }
-
-    public static checkHash(decrypted: string, encrypted: string) {
-        return bcrypt.compareSync(decrypted, encrypted);
-    }
 }

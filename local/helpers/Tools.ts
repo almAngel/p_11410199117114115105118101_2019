@@ -1,4 +1,5 @@
 import { AbstractController } from "../controllers/AbstractController";
+import bcrypt from "bcrypt";
 
 
 export function handledSend(arg: any) {
@@ -12,4 +13,12 @@ export function handledSend(arg: any) {
         Error.captureStackTrace(e, handledSend);
         throw e;
     }
+}
+
+export function hash(pass: string) {
+    return bcrypt.hashSync(pass, bcrypt.genSaltSync());
+}
+
+export function checkHash(decrypted: string, encrypted: string) {
+    return bcrypt.compareSync(decrypted, encrypted);
 }

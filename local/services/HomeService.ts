@@ -3,6 +3,7 @@ import { UserSchema } from "../schemas/UserSchema";
 import { GenericDAO } from "../schemas/dao/GenericDAO";
 import { DatabaseManager } from "../helpers/DatabaseManager";
 import TokenManager from "../helpers/TokenManager";
+import { hash, checkHash } from "../helpers/Tools";
 
 export default class HomeService {
 
@@ -29,7 +30,7 @@ export default class HomeService {
             email: this.requestBody.email
         });
 
-        let matches = UserSchema.checkHash(AbstractController.metadata("request").body.password, response.password);
+        let matches = checkHash(AbstractController.metadata("request").body.password, response.password);
 
         if (matches) {
             token = TokenManager.encode(
@@ -37,12 +38,16 @@ export default class HomeService {
                     id: response._id,
                     email: AbstractController.metadata("request").body.email,
                     username: response.username,
-                    created_timestamp: Date.now()
+                    expires: () => {
+                        let extraMins = 600000; // in milliseconds
+                        let expirationTimestamp = Date.now() + extraMins;
+                        return expirationTimestamp;
+                    }
                 }
             );
             response = await this.userDAO.saveOrUpdate(
                 {
-                    accessToken: token
+                    access_token: token
                 }
                 , response._id
             );
@@ -51,7 +56,7 @@ export default class HomeService {
         DatabaseManager.disconnect();
 
         return {
-            accessToken: token
+            access_token: token
         };
     }
     public static async registerUser() {
@@ -63,7 +68,7 @@ export default class HomeService {
         //Retrieve request body
         this.requestBody = AbstractController.metadata("request").body;
 
-        this.requestBody.password = UserSchema.hashPassword(this.requestBody.password);
+        this.requestBody.password = hash(this.requestBody.password);
 
         response = await this.userDAO.saveOrUpdate(this.requestBody);
 
