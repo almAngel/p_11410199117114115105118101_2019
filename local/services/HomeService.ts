@@ -54,24 +54,30 @@ export default class HomeService {
             //REF_TOKEN INSIDE TOKEN
             access_token = TokenManager.encode({
                 data: { 
-                    refToken: ref_token 
+                    ref_token: ref_token 
                 },
                 expirationTime: "10min"
             });
 
             //ASSOCIATE REF_TOKEN AND USER ID
-            await this.authBundleDAO.saveOrUpdate(
-                {
-                    refToken: ref_token,
-                    uId: response._id
-                }
-            );
+            let aux = await this.authBundleDAO.load({
+                u_id: response.id
+            });
 
-            response = await this.userDAO.saveOrUpdate(
+            if(aux != undefined) {
+                await this.authBundleDAO.saveOrUpdate(
+                    {
+                        ref_token: ref_token,
+                    },
+                    aux._id
+                );
+            }
+
+            await this.userDAO.saveOrUpdate(
                 {
                     access_token: access_token
-                }
-                , response._id
+                },
+                response._id
             );
         }
 

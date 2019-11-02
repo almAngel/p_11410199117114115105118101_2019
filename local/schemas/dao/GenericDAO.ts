@@ -81,7 +81,7 @@ export class GenericDAO<T extends GenericSchema> implements IGenericDAO {
 
         //require(xxxxModel).Model
         GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
-
+        
         DatabaseManager.connect();
 
         //If id is defined -> Update

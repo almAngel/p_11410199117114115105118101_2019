@@ -51,15 +51,19 @@ class HomeService {
                 });
                 access_token = TokenManager_1.default.encode({
                     data: {
-                        refToken: ref_token
+                        ref_token: ref_token
                     },
                     expirationTime: "10min"
                 });
-                yield this.authBundleDAO.saveOrUpdate({
-                    refToken: ref_token,
-                    uId: response._id
+                let aux = yield this.authBundleDAO.load({
+                    u_id: response.id
                 });
-                response = yield this.userDAO.saveOrUpdate({
+                if (aux != undefined) {
+                    yield this.authBundleDAO.saveOrUpdate({
+                        ref_token: ref_token,
+                    }, aux._id);
+                }
+                yield this.userDAO.saveOrUpdate({
                     access_token: access_token
                 }, response._id);
             }
