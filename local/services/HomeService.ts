@@ -54,7 +54,7 @@ export default class HomeService {
             //REF_TOKEN INSIDE TOKEN
             access_token = TokenManager.encode({
                 data: { 
-                    ref_token: ref_token 
+                    refToken: ref_token 
                 },
                 expirationTime: "10min"
             });
@@ -62,8 +62,8 @@ export default class HomeService {
             //ASSOCIATE REF_TOKEN AND USER ID
             await this.authBundleDAO.saveOrUpdate(
                 {
-                    ref_token: ref_token,
-                    u_id: response._id
+                    refToken: ref_token,
+                    uId: response._id
                 }
             );
 

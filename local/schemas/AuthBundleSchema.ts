@@ -8,9 +8,9 @@ export class AuthBundleSchema extends GenericSchema {
     }
 
     @Requirements({ required: true, unique: true, type: String })
-    public ref_token: string;
+    public refToken: string;
     @Requirements({ required: true, unique: true, type: String })
-    public u_id: string;
+    public uId: string;
 
     public getSchemaDefinition() {
         return super.getSchemaDefinition(this);
