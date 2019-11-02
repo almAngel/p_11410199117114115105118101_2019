@@ -1,9 +1,9 @@
-import { AbstractController } from "../controllers/AbstractController";
 import { UserSchema } from "../schemas/UserSchema";
 import { GenericDAO } from "../schemas/dao/GenericDAO";
 import { DatabaseManager } from "../helpers/DatabaseManager";
 import TokenManager from "../helpers/TokenManager";
 import { hash, checkHash } from "../helpers/Tools";
+import { AbstractController } from "../controllers/AbstractController";
 
 export default class HomeService {
 

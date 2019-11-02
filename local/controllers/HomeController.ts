@@ -1,7 +1,7 @@
 import { RestController } from "../decorators/RestController";
 import { AbstractController } from "./AbstractController";
 import { ContenType } from "../enum/ContentType";
-import LoginService from "../services/HomeService";
+import HomeService from "../services/HomeService";
 import { handledSend } from "../helpers/Tools";
 import { GET } from "../decorators/httpverbs/GET";
 import { POST } from "../decorators/httpverbs/POST";
@@ -25,7 +25,7 @@ export class HomeController extends AbstractController {
     @GET({ path: "/access", produces: ContenType.APP_JSON})
     public async getAccessToken() {
         let response;
-        response = await LoginService.getAccessToken();
+        response = await HomeService.getAccessToken();
 
         handledSend(response);
     }
@@ -34,7 +34,7 @@ export class HomeController extends AbstractController {
     public async register() {
         let response;
 
-        response = await LoginService.registerUser();
+        response = await HomeService.registerUser();
 
         handledSend(response);
     }

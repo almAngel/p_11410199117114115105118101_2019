@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const AbstractController_1 = require("../controllers/AbstractController");
 const UserSchema_1 = require("../schemas/UserSchema");
 const GenericDAO_1 = require("../schemas/dao/GenericDAO");
 const DatabaseManager_1 = require("../helpers/DatabaseManager");
 const TokenManager_1 = __importDefault(require("../helpers/TokenManager"));
 const Tools_1 = require("../helpers/Tools");
+const AbstractController_1 = require("../controllers/AbstractController");
 class HomeService {
     constructor() { }
     static getAccessToken() {
