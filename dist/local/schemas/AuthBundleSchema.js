@@ -17,8 +17,9 @@ const Requirements_1 = require("../decorators/Requirements");
 class AuthBundleSchema extends GenericSchema_1.default {
     constructor() {
         super();
-        this.ref_token = "";
         this.u_id = "";
+        this.public_ip = "";
+        this.ref_token = "";
     }
     getSchemaDefinition() {
         return super.getSchemaDefinition(this);
@@ -27,10 +28,14 @@ class AuthBundleSchema extends GenericSchema_1.default {
 __decorate([
     Requirements_1.Requirements({ required: true, unique: true, type: String }),
     __metadata("design:type", Object)
-], AuthBundleSchema.prototype, "ref_token", void 0);
+], AuthBundleSchema.prototype, "u_id", void 0);
 __decorate([
     Requirements_1.Requirements({ required: true, unique: true, type: String }),
     __metadata("design:type", Object)
-], AuthBundleSchema.prototype, "u_id", void 0);
+], AuthBundleSchema.prototype, "public_ip", void 0);
+__decorate([
+    Requirements_1.Requirements({ required: true, unique: true, type: String }),
+    __metadata("design:type", Object)
+], AuthBundleSchema.prototype, "ref_token", void 0);
 exports.AuthBundleSchema = AuthBundleSchema;
 //# sourceMappingURL=AuthBundleSchema.js.map

@@ -19,6 +19,7 @@ const TokenManager_1 = __importDefault(require("../helpers/TokenManager"));
 const Tools_1 = require("../helpers/Tools");
 const AbstractController_1 = require("../controllers/AbstractController");
 const AuthBundleSchema_1 = require("../schemas/AuthBundleSchema");
+const public_ip_1 = require("public-ip");
 class HomeService {
     constructor() { }
     static getAccessToken() {
@@ -58,10 +59,17 @@ class HomeService {
                 let aux = yield this.authBundleDAO.load({
                     u_id: response.id
                 });
-                if (aux != undefined) {
+                if (aux.status != 404) {
                     yield this.authBundleDAO.saveOrUpdate({
                         ref_token: ref_token,
                     }, aux._id);
+                }
+                else {
+                    yield this.authBundleDAO.saveOrUpdate({
+                        ref_token: ref_token,
+                        u_id: response._id,
+                        public_ip: yield public_ip_1.v4()
+                    });
                 }
                 yield this.userDAO.saveOrUpdate({
                     access_token: access_token
