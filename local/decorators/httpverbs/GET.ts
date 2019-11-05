@@ -3,20 +3,23 @@ import { ServerManager } from "../../helpers/ServerManager";
 import { ContenType } from "../../enum/ContentType";
 import { handledSend } from "../../helpers/Tools";
 import TokenManager from "../../helpers/TokenManager";
+import AuthBridge from "../../helpers/AuthBridge";
+import { v4 as pipRetrieverV4 } from "public-ip";
 
-export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: { path: string; produces?: ContenType; sealed?: boolean;}) {
+export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: { path: string; produces?: ContenType; sealed?: boolean; }) {
     //Initialize variables
     let originalMethod: Function;
     let result: any;
     let response: any;
+    let bridge: AuthBridge;
 
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor): any {
         originalMethod = descriptor.value;
 
         descriptor.value = function (...args: any[]) {
             let finalPath = String(args[0] + path).replace("//", "/");
-            
-            result = ServerManager.getInstance().get(finalPath, (req: any, res: any, next: any) => {
+
+            result = ServerManager.getInstance().get(finalPath, async (req: any, res: any, next: any) => {
                 //Response reset
                 response = "";
 
@@ -31,14 +34,19 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                                 AbstractController.setMetadata("px-token", req.header("px-token"));
                             }
                         } catch (e) {
-                            response = {
-                                msg: "Error: Malformed or expired access token",
-                                status: 403
+                            if(e.message == "invalid signature") {
+                                response = {
+                                    msg: "Error: Malformed access token",
+                                    status: 400
+                                }
+                            } else {
+                                bridge = new AuthBridge(await pipRetrieverV4(), token);
+                                response = await bridge.response;
                             }
                         }
                     } else {
                         response = {
-                            msg: "Error: Access token required",
+                            msg: "Unauthorized: Access token required",
                             status: 403
                         }
                     }

@@ -5,6 +5,7 @@ import TokenManager from "../helpers/TokenManager";
 import { hash, checkHash } from "../helpers/Tools";
 import { AbstractController } from "../controllers/AbstractController";
 import { AuthBundleSchema } from "../schemas/AuthBundleSchema";
+import { v4 as pipRetrieverV4 } from "public-ip";
 
 export default class HomeService {
 
@@ -54,7 +55,7 @@ export default class HomeService {
             //REF_TOKEN INSIDE TOKEN
             access_token = TokenManager.encode({
                 data: { 
-                    ref_token: ref_token 
+                    ref_token: ref_token
                 },
                 expirationTime: "10min"
             });
@@ -64,12 +65,21 @@ export default class HomeService {
                 u_id: response.id
             });
 
-            if(aux != undefined) {
+            //IF OUR REFRESH TOKEN ALREADY EXISTS -> UPDATE
+            if(aux.status != 404) {
                 await this.authBundleDAO.saveOrUpdate(
                     {
                         ref_token: ref_token,
                     },
                     aux._id
+                );
+            } else { //IF NOT, CREATE A NEW ONE
+                await this.authBundleDAO.saveOrUpdate(
+                    {
+                        ref_token: ref_token,
+                        u_id: response._id,
+                        public_ip: await pipRetrieverV4()
+                    }
                 );
             }
 
