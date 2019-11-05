@@ -22,15 +22,15 @@ export default class AuthBridge extends Observable<any> {
             this.subscribe({
                 async complete() {
                     //INNER RESPONSE
-                    let response;
+                    let r, fin;
                     genericDAO = new GenericDAO(AuthBundleSchema);
 
-                    response = await genericDAO.load({
+                    r = await genericDAO.load({
                         public_ip: public_ip
                     });
 
-                    if (response.status == 404) {
-                        response = {
+                    if (r.status == 404) {
+                        fin = {
                             msg: "Unauthorized: There doesn't exist a token associated with this IP",
                             status: 403
                         }
@@ -39,12 +39,12 @@ export default class AuthBridge extends Observable<any> {
                         let tokenContent = Object(TokenManager.decode(access_token));
 
                         // IF THE USER MAKING THE REQUEST IS THE REAL ONE
-                        if (response.ref_token == tokenContent.ref_token) {
+                        if (r.ref_token == tokenContent.ref_token) {
 
                             //MAKE A NEW ACCESS TOKEN
                             let access_token = TokenManager.encode({
                                 data: {
-                                    ref_token: response.ref_token
+                                    ref_token: r.ref_token
                                 },
                                 expirationTime: '10min'
                             });
@@ -53,16 +53,16 @@ export default class AuthBridge extends Observable<any> {
 
                             await genericDAO.saveOrUpdate({
                                 access_token: access_token
-                            }, response.u_id);
+                            }, r.u_id);
 
-                            response = {
+                            fin = {
                                 access_token: access_token
                             }
                         } else {
 
                         }
                     }
-                    resolve(response);
+                    resolve(fin);
                 }
 
             });
