@@ -70,6 +70,7 @@ export default class HomeService {
                 await this.authBundleDAO.saveOrUpdate(
                     {
                         ref_token: ref_token,
+                        public_ip: await pipRetrieverV4()
                     },
                     aux._id
                 );
