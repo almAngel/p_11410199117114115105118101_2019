@@ -39,7 +39,6 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                                 let n = await genericDAO.count({
                                     ref_token: token
                                 });
-                                AbstractController.setMetadata("px-token", req.header("px-token"));
                                 
                                 if(n == 1) {
                                     AbstractController.setMetadata("px-token", req.header("px-token"));
