@@ -3,7 +3,6 @@ import { GenericDAO } from "../schemas/dao/GenericDAO";
 import { AuthBundleSchema } from "../schemas/AuthBundleSchema";
 import TokenManager from "./TokenManager";
 import { UserSchema } from "../schemas/UserSchema";
-import { handledSend } from "./Tools";
 
 export default class AuthBridge extends Observable<any> {
 

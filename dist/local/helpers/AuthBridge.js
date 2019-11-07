@@ -27,38 +27,38 @@ class AuthBridge extends rxjs_1.Observable {
             this.subscribe({
                 complete() {
                     return __awaiter(this, void 0, void 0, function* () {
-                        let response;
+                        let r, fin;
                         genericDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
-                        response = yield genericDAO.load({
+                        r = yield genericDAO.load({
                             public_ip: public_ip
                         });
-                        if (response.status == 404) {
-                            response = {
+                        if (r.status == 404) {
+                            fin = {
                                 msg: "Unauthorized: There doesn't exist a token associated with this IP",
                                 status: 403
                             };
                         }
                         else {
                             let tokenContent = Object(TokenManager_1.default.decode(access_token));
-                            if (response.ref_token == tokenContent.ref_token) {
+                            if (r.ref_token == tokenContent.ref_token) {
                                 let access_token = TokenManager_1.default.encode({
                                     data: {
-                                        ref_token: response.ref_token
+                                        ref_token: r.ref_token
                                     },
                                     expirationTime: '10min'
                                 });
                                 genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
                                 yield genericDAO.saveOrUpdate({
                                     access_token: access_token
-                                }, response.u_id);
-                                response = {
+                                }, r.u_id);
+                                fin = {
                                     access_token: access_token
                                 };
                             }
                             else {
                             }
                         }
-                        resolve(response);
+                        resolve(fin);
                     });
                 }
             });

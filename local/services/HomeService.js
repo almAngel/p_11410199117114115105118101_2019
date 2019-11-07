@@ -62,6 +62,7 @@ class HomeService {
                 if (aux.status != 404) {
                     yield this.authBundleDAO.saveOrUpdate({
                         ref_token: ref_token,
+                        public_ip: yield public_ip_1.v4()
                     }, aux._id);
                 }
                 else {

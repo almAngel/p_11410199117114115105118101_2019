@@ -3,9 +3,6 @@ import { AbstractController } from "./AbstractController";
 import { GET } from "../decorators/httpverbs/GET";
 import { ContenType } from "../enum/ContentType";
 import { handledSend } from "../helpers/Tools";
-import HomeService from "../services/HomeService";
-import { POST } from "../decorators/httpverbs/POST";
-import AuthBridge from "../helpers/AuthBridge";
 
 @RestController("/shop")
 export class SheeController extends AbstractController {

@@ -7,7 +7,12 @@ const config_json_1 = __importDefault(require("../../config.json"));
 const mongoose_1 = __importDefault(require("mongoose"));
 class DatabaseManager {
     static connect() {
-        this.instance.connect(this.url, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false }, (err) => {
+        this.instance.connect(this.url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false
+        }, (err) => {
             if (err)
                 throw err;
             console.log(`>>> Connection to selected database made at ${this.date.getHours()}:${this.date.getMinutes()}:${this.date.getSeconds()} on ${this.date.getMonth()}/${this.date.getDay()}/${this.date.getFullYear()}`);

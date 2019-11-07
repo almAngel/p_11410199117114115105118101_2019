@@ -24,6 +24,7 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
     let result;
     let response;
     let bridge;
+    let genericDAO;
     return function (target, propertyKey, descriptor) {
         originalMethod = descriptor.value;
         descriptor.value = function (...args) {
