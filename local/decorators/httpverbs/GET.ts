@@ -34,13 +34,13 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                     if (token) {
                         try {
                             if (!TokenManager.expired(token)) {
-                                /*genericDAO = new GenericDAO(UserSchema);
+                                genericDAO = new GenericDAO(UserSchema);
 
                                 let n = await genericDAO.count({
                                     ref_token: token
-                                });*/
+                                });
                                 AbstractController.setMetadata("px-token", req.header("px-token"));
-                                /*
+                                
                                 if(n == 1) {
                                     AbstractController.setMetadata("px-token", req.header("px-token"));
                                 } else {
@@ -49,7 +49,7 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                                         status: 403
                                     }
                                 }
-                                */
+                                
                             }
                         } catch (e) {
                             if(e.message == "invalid signature") {
