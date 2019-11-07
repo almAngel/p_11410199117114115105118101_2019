@@ -23,7 +23,7 @@ export class HomeController extends AbstractController {
         handledSend(response);
     }
 
-    @GET({ path: "/access", produces: ContenType.APP_JSON})
+    @POST({ path: "/access", produces: ContenType.APP_JSON})
     public async getAccessToken() {
         let response;
         response = await HomeService.getAccessToken();
