@@ -19,6 +19,8 @@ const Tools_1 = require("../../helpers/Tools");
 const TokenManager_1 = __importDefault(require("../../helpers/TokenManager"));
 const AuthBridge_1 = __importDefault(require("../../helpers/AuthBridge"));
 const public_ip_1 = require("public-ip");
+const GenericDAO_1 = require("../../schemas/dao/GenericDAO");
+const UserSchema_1 = require("../../schemas/UserSchema");
 function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = false }) {
     let originalMethod;
     let result;
@@ -37,7 +39,19 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                     if (token) {
                         try {
                             if (!TokenManager_1.default.expired(token)) {
-                                AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
+                                genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
+                                let n = yield genericDAO.count({
+                                    ref_token: token
+                                });
+                                if (n == 1) {
+                                    AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
+                                }
+                                else {
+                                    response = {
+                                        msg: "Unauthorized: User not found",
+                                        status: 403
+                                    };
+                                }
                             }
                         }
                         catch (e) {
