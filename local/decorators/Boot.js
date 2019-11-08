@@ -4,7 +4,6 @@ const ServerManager_1 = require("../helpers/ServerManager");
 const fs_1 = require("fs");
 function Boot() {
     return function (constructor) {
-        ServerManager_1.ServerManager.init();
         fs_1.readdir("./local" + ServerManager_1.ServerManager.config().controllers_path, (err, files) => {
             files = files.filter((e) => {
                 return e.endsWith(".js");

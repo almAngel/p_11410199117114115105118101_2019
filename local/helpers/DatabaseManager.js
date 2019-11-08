@@ -6,8 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_json_1 = __importDefault(require("../../config.json"));
 const mongoose_1 = __importDefault(require("mongoose"));
 class DatabaseManager {
-    static connect() {
-        this.instance.connect(this.url, {
+    constructor() {
+        this.instance = mongoose_1.default;
+        this.instance = mongoose_1.default;
+    }
+    connect() {
+        this.instance.connect(DatabaseManager.url, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
@@ -15,10 +19,10 @@ class DatabaseManager {
         }, (err) => {
             if (err)
                 throw err;
-            console.log(`>>> Connection to selected database made at ${this.date.getHours()}:${this.date.getMinutes()}:${this.date.getSeconds()} on ${this.date.getMonth()}/${this.date.getDay()}/${this.date.getFullYear()}`);
+            console.log(`>>> Connection to selected database made at ${DatabaseManager.date.getHours()}:${DatabaseManager.date.getMinutes()}:${DatabaseManager.date.getSeconds()} on ${DatabaseManager.date.getMonth()}/${DatabaseManager.date.getDay()}/${DatabaseManager.date.getFullYear()}`);
         });
     }
-    static getInstance() {
+    getInstance() {
         return this.instance;
     }
     static getConfig() {
@@ -27,17 +31,16 @@ class DatabaseManager {
     static getUrl() {
         return this.url;
     }
-    static perform(action) {
+    perform(action) {
         this.connect();
         action();
         this.disconnect();
     }
-    static disconnect() {
+    disconnect() {
         this.instance.disconnect();
     }
 }
 exports.DatabaseManager = DatabaseManager;
-DatabaseManager.instance = mongoose_1.default;
 DatabaseManager.url = config_json_1.default.database_route;
 DatabaseManager.date = new Date();
 //# sourceMappingURL=DatabaseManager.js.map

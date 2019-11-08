@@ -16,10 +16,13 @@ export class GenericDAO<T extends GenericSchema> implements IGenericDAO {
     public async load(body: Object): Promise<any> {
         let finalResponse: any;
         let databaseResponse: any;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
 
         GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
 
-        DatabaseManager.connect();
+        databaseManager.connect();
         databaseResponse = await GenericDAO.model.findOne(body).exec();
 
         if (databaseResponse != null) {
@@ -36,10 +39,13 @@ export class GenericDAO<T extends GenericSchema> implements IGenericDAO {
     public async loadById(id: string): Promise<any> {
         let finalResponse: any;
         let databaseResponse: any;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
 
         GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
 
-        DatabaseManager.connect();
+        databaseManager.connect();
         databaseResponse = await GenericDAO.model.findById(new ObjectId(id)).exec();
 
         if (databaseResponse != null) {
@@ -56,11 +62,14 @@ export class GenericDAO<T extends GenericSchema> implements IGenericDAO {
     public async loadGroup(body: Object): Promise<any> {
         let finalResponse: any;
         let databaseResponse: any;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
 
         //require(xxxxModel).Model
         GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
 
-        DatabaseManager.connect();
+        databaseManager.connect();
 
         databaseResponse = await GenericDAO.model.find(body).exec();
 
@@ -78,11 +87,14 @@ export class GenericDAO<T extends GenericSchema> implements IGenericDAO {
     public async saveOrUpdate(body: Object, id?: string): Promise<any> {
         let finalResponse: any;
         let databaseResponse: any;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
 
         //require(xxxxModel).Model
         GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
         
-        DatabaseManager.connect();
+        databaseManager.connect();
 
         //If id is defined -> Update
         if (id != undefined) {
@@ -133,11 +145,14 @@ export class GenericDAO<T extends GenericSchema> implements IGenericDAO {
     public async delete(id: string): Promise<any> {
         let finalResponse: any;
         let databaseResponse: any;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
 
         //require(xxxxModel).Model
         GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
 
-        DatabaseManager.connect();
+        databaseManager.connect();
 
         databaseResponse = await GenericDAO.model.findByIdAndDelete(id).exec();
 
@@ -159,10 +174,13 @@ export class GenericDAO<T extends GenericSchema> implements IGenericDAO {
     public async count(body: Object): Promise<any> {
         let finalResponse: any;
         let databaseResponse: any;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
 
         GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
 
-        DatabaseManager.connect();
+        databaseManager.connect();
         databaseResponse = await GenericDAO.model.countDocuments(body).exec();
 
         if (databaseResponse != null) {

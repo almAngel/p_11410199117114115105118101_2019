@@ -4,25 +4,25 @@ import bodyParser from "body-parser";
 import cors from "cors";
 
 export class ServerManager {
-    private static readonly instance = express();
-    private static readonly cfg = config;
+    private instance: any;
+    private static readonly cfg = config;    
 
-    public static init() {
-        
+    constructor() {
+        this.instance = express();
+
         this.instance.use(bodyParser.json());
         this.instance.use(bodyParser.urlencoded({ extended: true }));
         this.instance.use(cors());
 
-        this.instance.listen(process.env.PORT || this.cfg.default_port, () => {
-            console.log("Server initialized at port " + this.cfg.server_route + ":" + process.env.PORT);
+        this.instance.listen(process.env.PORT || ServerManager.cfg.default_port, () => {
+            console.log("Server initialized at port " + ServerManager.cfg.server_route + ":" + process.env.PORT || ServerManager.cfg.default_port);
         })
-        .on("error", () => {
+        .on("error", (e:any) => {
             console.log("Error: Couldn't start a new server");
         });
-
     }
 
-    public static getInstance() {
+    public getInstance() {
         return this.instance;
     };
 

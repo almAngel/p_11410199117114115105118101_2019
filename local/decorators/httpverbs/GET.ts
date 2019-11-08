@@ -7,6 +7,7 @@ import AuthBridge from "../../helpers/AuthBridge";
 import { v4 as pipRetrieverV4 } from "public-ip";
 import { GenericDAO } from "../../schemas/dao/GenericDAO";
 import { UserSchema } from "../../schemas/UserSchema";
+import { App } from "../../../bootstrapper";
 
 export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: { path: string; produces?: ContenType; sealed?: boolean; }) {
     //Initialize variables
@@ -22,7 +23,7 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
         descriptor.value = function (...args: any[]) {
             let finalPath = String(args[0] + path).replace("//", "/");
 
-            result = ServerManager.getInstance().get(finalPath, async (req: any, res: any, next: any) => {
+            result = App.serverManager.getInstance().get(finalPath, async (req: any, res: any, next: any) => {
                 //Response reset
                 response = "";
 

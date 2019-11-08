@@ -8,18 +8,19 @@ const config_json_1 = __importDefault(require("../../config.json"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 class ServerManager {
-    static init() {
+    constructor() {
+        this.instance = express_1.default();
         this.instance.use(body_parser_1.default.json());
         this.instance.use(body_parser_1.default.urlencoded({ extended: true }));
         this.instance.use(cors_1.default());
-        this.instance.listen(process.env.PORT || this.cfg.default_port, () => {
-            console.log("Server initialized at port " + this.cfg.server_route + ":" + process.env.PORT);
+        this.instance.listen(process.env.PORT || ServerManager.cfg.default_port, () => {
+            console.log("Server initialized at port " + ServerManager.cfg.server_route + ":" + process.env.PORT || ServerManager.cfg.default_port);
         })
-            .on("error", () => {
+            .on("error", (e) => {
             console.log("Error: Couldn't start a new server");
         });
     }
-    static getInstance() {
+    getInstance() {
         return this.instance;
     }
     ;
@@ -31,6 +32,5 @@ class ServerManager {
     }
 }
 exports.ServerManager = ServerManager;
-ServerManager.instance = express_1.default();
 ServerManager.cfg = config_json_1.default;
 //# sourceMappingURL=ServerManager.js.map

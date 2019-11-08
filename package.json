@@ -2,7 +2,7 @@
   "name": "bapi",
   "version": "1.0.0",
   "description": "Basic MEAN API",
-  "main": "dist/bootstrapper.js",
+  "main": "bootstrapper.ts",
   "engines": {
     "node": "12.13.0"
   },
@@ -13,6 +13,7 @@
     "@types/jsonwebtoken": "^8.3.4",
     "@types/mongodb": "^3.3.1",
     "@types/node": "^12.12.0",
+    "aws-sdk": "^2.566.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -37,13 +38,13 @@
     "typescript": "^3.6.3"
   },
   "scripts": {
-    "start": "node dist/bootstrapper.js",
+    "start": "node bootstrapper.js",
     "test": "mocha bootstrapper.js",
     "cover": "nyc --reporter=text mocha",
     "build": "tsc",
     "watch": "tsc -w",
-    "serve": "npm run build && node dist/bootstrapper.js",
-    "live": "nodemon -e ts,json --exec \"npm run build && ts-node bootstrapper.ts\""
+    "serve": "npm run build && node bootstrapper.js",
+    "live": "nodemon -e ts,json --exec \"npm run build && node bootstrapper.js\""
   },
   "author": "Ángel López Molina",
   "license": "ISC"

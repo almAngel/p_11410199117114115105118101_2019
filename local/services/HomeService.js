@@ -27,6 +27,8 @@ class HomeService {
             let response;
             let access_token, ref_token;
             let matches;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
             this.authBundleDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
             this.requestBody = {
@@ -76,7 +78,7 @@ class HomeService {
                     access_token: access_token
                 }, response._id);
             }
-            DatabaseManager_1.DatabaseManager.disconnect();
+            databaseManager.disconnect();
             return {
                 access_token: access_token
             };
@@ -85,11 +87,13 @@ class HomeService {
     static registerUser() {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
             this.requestBody = AbstractController_1.AbstractController.metadata("request").body;
             this.requestBody.password = Tools_1.hash(this.requestBody.password);
             response = yield this.userDAO.saveOrUpdate(this.requestBody);
-            DatabaseManager_1.DatabaseManager.disconnect();
+            databaseManager.disconnect();
             return response;
         });
     }
