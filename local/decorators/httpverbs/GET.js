@@ -41,6 +41,7 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                         let n = yield genericDAO.count({
                             access_token: token
                         });
+                        console.log(n);
                         if (n == 1) {
                             try {
                                 if (!TokenManager_1.default.expired(token)) {
