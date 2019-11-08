@@ -44,11 +44,6 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                         if (n == 1) {
                             try {
                                 if (!TokenManager.expired(token)) {
-                                    genericDAO = new GenericDAO(UserSchema);
-
-                                    let n = await genericDAO.count({
-                                        access_token: token
-                                    });
 
                                     if (n == 1) {
                                         AbstractController.setMetadata("px-token", req.header("px-token"));

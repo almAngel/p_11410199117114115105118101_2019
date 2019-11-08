@@ -45,10 +45,6 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                         if (n == 1) {
                             try {
                                 if (!TokenManager_1.default.expired(token)) {
-                                    genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
-                                    let n = yield genericDAO.count({
-                                        access_token: token
-                                    });
                                     if (n == 1) {
                                         AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
                                     }
