@@ -81,9 +81,11 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                 AbstractController.setMetadata("status", 200);
                 AbstractController.setMetadata("next", next);
 
+                /*
                 if (response) {
                     handledSend(response);
                 }
+                */
 
                 originalMethod.apply(this, args);
             });

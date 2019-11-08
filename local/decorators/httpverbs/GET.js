@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const AbstractController_1 = require("../../controllers/AbstractController");
 const ContentType_1 = require("../../enum/ContentType");
-const Tools_1 = require("../../helpers/Tools");
 const TokenManager_1 = __importDefault(require("../../helpers/TokenManager"));
 const AuthBridge_1 = __importDefault(require("../../helpers/AuthBridge"));
 const public_ip_1 = require("public-ip");
@@ -82,9 +81,6 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                 AbstractController_1.AbstractController.setMetadata("urlParams", req.params);
                 AbstractController_1.AbstractController.setMetadata("status", 200);
                 AbstractController_1.AbstractController.setMetadata("next", next);
-                if (response) {
-                    Tools_1.handledSend(response);
-                }
                 originalMethod.apply(this, args);
             }));
             return result;
