@@ -42,31 +42,29 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                             access_token: token
                         });
                         response = n;
-                        if (n.status != 404) {
-                            try {
-                                if (!TokenManager_1.default.expired(token)) {
-                                    if (n == 1) {
-                                        AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
-                                    }
-                                    else {
-                                        response = {
-                                            msg: "Unauthorized: User not found",
-                                            status: 403
-                                        };
-                                    }
-                                }
-                            }
-                            catch (e) {
-                                if (e.message == "invalid signature") {
-                                    response = {
-                                        msg: "Error: Malformed access token",
-                                        status: 400
-                                    };
+                        try {
+                            if (!TokenManager_1.default.expired(token)) {
+                                if (n.status != 404) {
+                                    AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
                                 }
                                 else {
-                                    bridge = new AuthBridge_1.default(yield public_ip_1.v4(), token);
-                                    response = yield bridge.response;
+                                    response = {
+                                        msg: "Unauthorized: User not found",
+                                        status: 403
+                                    };
                                 }
+                            }
+                        }
+                        catch (e) {
+                            if (e.message == "invalid signature") {
+                                response = {
+                                    msg: "Error: Malformed access token",
+                                    status: 400
+                                };
+                            }
+                            else {
+                                bridge = new AuthBridge_1.default(yield public_ip_1.v4(), token);
+                                response = yield bridge.response;
                             }
                         }
                     }

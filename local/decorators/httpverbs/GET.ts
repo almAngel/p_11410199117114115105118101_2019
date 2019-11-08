@@ -42,30 +42,28 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
 
                         response = n;
 
-                        if (n.status != 404) {
-                            try {
-                                if (!TokenManager.expired(token)) {
+                        try {
+                            if (!TokenManager.expired(token)) {
 
-                                    if (n == 1) {
-                                        AbstractController.setMetadata("px-token", req.header("px-token"));
-                                    } else {
-                                        response = {
-                                            msg: "Unauthorized: User not found",
-                                            status: 403
-                                        }
-                                    }
-
-                                }
-                            } catch (e) {
-                                if (e.message == "invalid signature") {
-                                    response = {
-                                        msg: "Error: Malformed access token",
-                                        status: 400
-                                    }
+                                if (n.status != 404) {
+                                    AbstractController.setMetadata("px-token", req.header("px-token"));
                                 } else {
-                                    bridge = new AuthBridge(await pipRetrieverV4(), token);
-                                    response = await bridge.response;
+                                    response = {
+                                        msg: "Unauthorized: User not found",
+                                        status: 403
+                                    }
                                 }
+
+                            }
+                        } catch (e) {
+                            if (e.message == "invalid signature") {
+                                response = {
+                                    msg: "Error: Malformed access token",
+                                    status: 400
+                                }
+                            } else {
+                                bridge = new AuthBridge(await pipRetrieverV4(), token);
+                                response = await bridge.response;
                             }
                         }
                     } else {
