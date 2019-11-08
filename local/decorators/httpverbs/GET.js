@@ -37,33 +37,39 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                 if (sealed) {
                     let token = req.header("px-token");
                     if (token) {
-                        try {
-                            if (!TokenManager_1.default.expired(token)) {
-                                genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
-                                let n = yield genericDAO.count({
-                                    access_token: token
-                                });
-                                if (n == 1) {
-                                    AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
+                        genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
+                        let n = yield genericDAO.count({
+                            access_token: token
+                        });
+                        if (n == 1) {
+                            try {
+                                if (!TokenManager_1.default.expired(token)) {
+                                    genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
+                                    let n = yield genericDAO.count({
+                                        access_token: token
+                                    });
+                                    if (n == 1) {
+                                        AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
+                                    }
+                                    else {
+                                        response = {
+                                            msg: "Unauthorized: User not found",
+                                            status: 403
+                                        };
+                                    }
                                 }
-                                else {
+                            }
+                            catch (e) {
+                                if (e.message == "invalid signature") {
                                     response = {
-                                        msg: "Unauthorized: User not found",
-                                        status: 403
+                                        msg: "Error: Malformed access token",
+                                        status: 400
                                     };
                                 }
-                            }
-                        }
-                        catch (e) {
-                            if (e.message == "invalid signature") {
-                                response = {
-                                    msg: "Error: Malformed access token",
-                                    status: 400
-                                };
-                            }
-                            else {
-                                bridge = new AuthBridge_1.default(yield public_ip_1.v4(), token);
-                                response = yield bridge.response;
+                                else {
+                                    bridge = new AuthBridge_1.default(yield public_ip_1.v4(), token);
+                                    response = yield bridge.response;
+                                }
                             }
                         }
                     }

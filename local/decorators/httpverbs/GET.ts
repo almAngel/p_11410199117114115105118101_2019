@@ -33,33 +33,40 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                 if (sealed) {
                     let token = req.header("px-token");
                     if (token) {
-                        try {
-                            if (!TokenManager.expired(token)) {
-                                genericDAO = new GenericDAO(UserSchema);
+                        genericDAO = new GenericDAO(UserSchema);
 
-                                let n = await genericDAO.count({
-                                    access_token: token
-                                });
+                        let n = await genericDAO.count({
+                            access_token: token
+                        });
+                        if (n == 1) {
+                            try {
+                                if (!TokenManager.expired(token)) {
+                                    genericDAO = new GenericDAO(UserSchema);
 
-                                if(n == 1) {
-                                    AbstractController.setMetadata("px-token", req.header("px-token"));
-                                } else {
-                                    response = {
-                                        msg: "Unauthorized: User not found",
-                                        status: 403
+                                    let n = await genericDAO.count({
+                                        access_token: token
+                                    });
+
+                                    if (n == 1) {
+                                        AbstractController.setMetadata("px-token", req.header("px-token"));
+                                    } else {
+                                        response = {
+                                            msg: "Unauthorized: User not found",
+                                            status: 403
+                                        }
                                     }
+
                                 }
-                                
-                            }
-                        } catch (e) {
-                            if(e.message == "invalid signature") {
-                                response = {
-                                    msg: "Error: Malformed access token",
-                                    status: 400
+                            } catch (e) {
+                                if (e.message == "invalid signature") {
+                                    response = {
+                                        msg: "Error: Malformed access token",
+                                        status: 400
+                                    }
+                                } else {
+                                    bridge = new AuthBridge(await pipRetrieverV4(), token);
+                                    response = await bridge.response;
                                 }
-                            } else {
-                                bridge = new AuthBridge(await pipRetrieverV4(), token);
-                                response = await bridge.response;
                             }
                         }
                     } else {
