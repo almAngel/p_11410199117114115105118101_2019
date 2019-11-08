@@ -1,1 +1,1 @@
-web: node dist/bootstrapper.js
+web: node bootstrapper.js
