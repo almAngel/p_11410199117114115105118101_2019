@@ -41,30 +41,30 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                         let n = yield genericDAO.load({
                             access_token: token
                         });
-                        try {
-                            if (!TokenManager_1.default.expired(token)) {
-                                if (n.status != 404) {
+                        if (n.status != 404) {
+                            try {
+                                if (!TokenManager_1.default.expired(token)) {
                                     AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
                                 }
-                                else {
+                            }
+                            catch (e) {
+                                if (e.message == "invalid signature") {
                                     response = {
-                                        msg: "Unauthorized: User not found",
-                                        status: 403
+                                        msg: "Error: Malformed access token",
+                                        status: 400
                                     };
+                                }
+                                else {
+                                    bridge = new AuthBridge_1.default(yield public_ip_1.v4(), token);
+                                    response = yield bridge.response;
                                 }
                             }
                         }
-                        catch (e) {
-                            if (e.message == "invalid signature") {
-                                response = {
-                                    msg: "Error: Malformed access token",
-                                    status: 400
-                                };
-                            }
-                            else {
-                                bridge = new AuthBridge_1.default(yield public_ip_1.v4(), token);
-                                response = yield bridge.response;
-                            }
+                        else {
+                            response = {
+                                msg: "Unauthorized: User not found",
+                                status: 403
+                            };
                         }
                     }
                     else {
