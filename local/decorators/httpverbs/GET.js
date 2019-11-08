@@ -42,7 +42,7 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                             access_token: token
                         });
                         response = n;
-                        if (n.length == 1) {
+                        if (n.status != 404) {
                             try {
                                 if (!TokenManager_1.default.expired(token)) {
                                     if (n == 1) {

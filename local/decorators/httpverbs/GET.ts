@@ -42,7 +42,7 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
 
                         response = n;
 
-                        if (n.length == 1) {
+                        if (n.status != 404) {
                             try {
                                 if (!TokenManager.expired(token)) {
 
