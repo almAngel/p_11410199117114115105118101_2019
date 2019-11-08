@@ -8,6 +8,7 @@ import { v4 as pipRetrieverV4 } from "public-ip";
 import { GenericDAO } from "../../schemas/dao/GenericDAO";
 import { UserSchema } from "../../schemas/UserSchema";
 import { App } from "../../../bootstrapper";
+import e = require("express");
 
 export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: { path: string; produces?: ContenType; sealed?: boolean; }) {
     //Initialize variables
@@ -35,13 +36,11 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                     if (token) {
                         genericDAO = new GenericDAO(UserSchema);
 
-                        let n = await genericDAO.count({
+                        let n = await genericDAO.load({
                             access_token: token
                         });
-
-                        console.log(n);
                         
-                        if (n == 1) {
+                        if (n.length == 1) {
                             try {
                                 if (!TokenManager.expired(token)) {
 
@@ -81,11 +80,9 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                 AbstractController.setMetadata("status", 200);
                 AbstractController.setMetadata("next", next);
 
-                /*
                 if (response) {
                     handledSend(response);
                 }
-                */
 
                 originalMethod.apply(this, args);
             });
