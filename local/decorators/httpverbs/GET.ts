@@ -40,6 +40,9 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                             access_token: token
                         });
                         
+                        console.log(n);
+                        
+                        
                         if (n.length == 1) {
                             try {
                                 if (!TokenManager.expired(token)) {
