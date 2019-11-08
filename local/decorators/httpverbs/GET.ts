@@ -39,10 +39,9 @@ export function GET({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: 
                         let n = await genericDAO.load({
                             access_token: token
                         });
-                        
-                        console.log(n);
-                        
-                        
+
+                        response = n;
+
                         if (n.length == 1) {
                             try {
                                 if (!TokenManager.expired(token)) {
