@@ -2,5 +2,5 @@
     "watch": ["./"],
     "ext": "ts",
     "ignore": ["**/*.test.ts", "**/*.spec.ts", ".git", "node_modules", "dist"],
-    "exec": "node bootstrapper.ts"
+        "exec": "node bootstrapper.js"
 }

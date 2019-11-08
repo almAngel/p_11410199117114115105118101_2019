@@ -19,6 +19,9 @@ export default class HomeService {
         let response: any;
         let access_token, ref_token: string;
         let matches: boolean;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
 
         //Create DAO
         this.userDAO = new GenericDAO(UserSchema);
@@ -92,7 +95,7 @@ export default class HomeService {
             );
         }
 
-        DatabaseManager.disconnect();
+        databaseManager.disconnect();
 
         return {
             access_token: access_token
@@ -100,6 +103,9 @@ export default class HomeService {
     }
     public static async registerUser() {
         let response: Promise<any>;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
 
         //Create DAO
         this.userDAO = new GenericDAO(UserSchema);
@@ -111,7 +117,7 @@ export default class HomeService {
 
         response = await this.userDAO.saveOrUpdate(this.requestBody);
 
-        DatabaseManager.disconnect();
+        databaseManager.disconnect();
 
         return response;
     }

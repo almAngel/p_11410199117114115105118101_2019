@@ -63,7 +63,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], HomeController.prototype, "hello", null);
 __decorate([
-    GET_1.GET({ path: "/access", produces: ContentType_1.ContenType.APP_JSON }),
+    POST_1.POST({ path: "/access", produces: ContentType_1.ContenType.APP_JSON }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

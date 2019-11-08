@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const AbstractController_1 = require("../../controllers/AbstractController");
-const ServerManager_1 = require("../../helpers/ServerManager");
 const ContentType_1 = require("../../enum/ContentType");
 const Tools_1 = require("../../helpers/Tools");
 const TokenManager_1 = __importDefault(require("../../helpers/TokenManager"));
@@ -21,6 +20,7 @@ const AuthBridge_1 = __importDefault(require("../../helpers/AuthBridge"));
 const public_ip_1 = require("public-ip");
 const GenericDAO_1 = require("../../schemas/dao/GenericDAO");
 const UserSchema_1 = require("../../schemas/UserSchema");
+const bootstrapper_1 = require("../../../bootstrapper");
 function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = false }) {
     let originalMethod;
     let result;
@@ -31,7 +31,7 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
         originalMethod = descriptor.value;
         descriptor.value = function (...args) {
             let finalPath = String(args[0] + path).replace("//", "/");
-            result = ServerManager_1.ServerManager.getInstance().get(finalPath, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            result = bootstrapper_1.App.serverManager.getInstance().get(finalPath, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
                 response = "";
                 res.setHeader("Content-type", produces);
                 if (sealed) {
@@ -41,9 +41,8 @@ function GET({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = fa
                             if (!TokenManager_1.default.expired(token)) {
                                 genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
                                 let n = yield genericDAO.count({
-                                    ref_token: token
+                                    access_token: token
                                 });
-                                AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
                                 if (n == 1) {
                                     AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
                                 }

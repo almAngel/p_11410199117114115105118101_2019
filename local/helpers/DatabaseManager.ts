@@ -2,14 +2,17 @@ import config from "../../config.json";
 import mongoose from "mongoose";
 
 export class DatabaseManager {
-    private static readonly instance = mongoose;
+    private instance = mongoose;
     //private static readonly url: string = config.database_route + ":" + config.database_port + "/" + config.database_name;
     private static readonly url: string = config.database_route;
     private static readonly date: Date = new Date();
 
-    public static connect() {
-        
-        this.instance.connect(this.url, { 
+    constructor() {
+        this.instance = mongoose;
+    }
+
+    public connect() {
+        this.instance.connect(DatabaseManager.url, { 
             useNewUrlParser: true, 
             useUnifiedTopology: true, 
             useCreateIndex: true, 
@@ -17,11 +20,11 @@ export class DatabaseManager {
         }, (err) => {
             if (err) throw err;
             console.log(
-                `>>> Connection to selected database made at ${this.date.getHours()}:${this.date.getMinutes()}:${this.date.getSeconds()} on ${this.date.getMonth()}/${this.date.getDay()}/${this.date.getFullYear()}`);
+                `>>> Connection to selected database made at ${DatabaseManager.date.getHours()}:${DatabaseManager.date.getMinutes()}:${DatabaseManager.date.getSeconds()} on ${DatabaseManager.date.getMonth()}/${DatabaseManager.date.getDay()}/${DatabaseManager.date.getFullYear()}`);
         });
     }
 
-    public static getInstance() {
+    public getInstance() {
         return this.instance;
     }
 
@@ -33,13 +36,13 @@ export class DatabaseManager {
         return this.url;
     }
 
-    public static perform(action: Function) {
+    public perform(action: Function) {
         this.connect();
         action();
         this.disconnect();
     }
 
-    public static disconnect() {
+    public disconnect() {
         this.instance.disconnect();
     }
 

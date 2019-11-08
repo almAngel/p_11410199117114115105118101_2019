@@ -10,12 +10,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Boot_1 = require("./local/decorators/Boot");
+const ServerManager_1 = require("./local/helpers/ServerManager");
 let App = class App {
-    constructor() { }
+    constructor() {
+    }
 };
+App.serverManager = new ServerManager_1.ServerManager();
 App = __decorate([
     Boot_1.Boot(),
     __metadata("design:paramtypes", [])
 ], App);
-exports.default = App;
+exports.App = App;
 //# sourceMappingURL=bootstrapper.js.map

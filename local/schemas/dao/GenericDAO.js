@@ -19,8 +19,10 @@ class GenericDAO {
         return __awaiter(this, void 0, void 0, function* () {
             let finalResponse;
             let databaseResponse;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
             GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
-            DatabaseManager_1.DatabaseManager.connect();
+            databaseManager.connect();
             databaseResponse = yield GenericDAO.model.findOne(body).exec();
             if (databaseResponse != null) {
                 finalResponse = databaseResponse;
@@ -38,8 +40,10 @@ class GenericDAO {
         return __awaiter(this, void 0, void 0, function* () {
             let finalResponse;
             let databaseResponse;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
             GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
-            DatabaseManager_1.DatabaseManager.connect();
+            databaseManager.connect();
             databaseResponse = yield GenericDAO.model.findById(new mongodb_1.ObjectId(id)).exec();
             if (databaseResponse != null) {
                 finalResponse = databaseResponse;
@@ -57,8 +61,10 @@ class GenericDAO {
         return __awaiter(this, void 0, void 0, function* () {
             let finalResponse;
             let databaseResponse;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
             GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
-            DatabaseManager_1.DatabaseManager.connect();
+            databaseManager.connect();
             databaseResponse = yield GenericDAO.model.find(body).exec();
             if (databaseResponse != null) {
                 finalResponse = databaseResponse;
@@ -76,8 +82,10 @@ class GenericDAO {
         return __awaiter(this, void 0, void 0, function* () {
             let finalResponse;
             let databaseResponse;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
             GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
-            DatabaseManager_1.DatabaseManager.connect();
+            databaseManager.connect();
             if (id != undefined) {
                 databaseResponse = yield GenericDAO.model.findByIdAndUpdate(id, body).exec();
                 if (databaseResponse) {
@@ -127,8 +135,10 @@ class GenericDAO {
         return __awaiter(this, void 0, void 0, function* () {
             let finalResponse;
             let databaseResponse;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
             GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
-            DatabaseManager_1.DatabaseManager.connect();
+            databaseManager.connect();
             databaseResponse = yield GenericDAO.model.findByIdAndDelete(id).exec();
             if (databaseResponse) {
                 finalResponse = {
@@ -149,8 +159,10 @@ class GenericDAO {
         return __awaiter(this, void 0, void 0, function* () {
             let finalResponse;
             let databaseResponse;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
             GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
-            DatabaseManager_1.DatabaseManager.connect();
+            databaseManager.connect();
             databaseResponse = yield GenericDAO.model.countDocuments(body).exec();
             if (databaseResponse != null) {
                 finalResponse = databaseResponse;

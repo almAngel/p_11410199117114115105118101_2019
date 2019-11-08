@@ -3,12 +3,19 @@ import { ServerManager } from "../../helpers/ServerManager";
 import { AbstractController } from "../../controllers/AbstractController";
 import { handledSend } from "../../helpers/Tools";
 import TokenManager from "../../helpers/TokenManager";
+import AuthBridge from "../../helpers/AuthBridge";
+import { v4 as pipRetrieverV4 } from "public-ip";
+import { GenericDAO } from "../../schemas/dao/GenericDAO";
+import { UserSchema } from "../../schemas/UserSchema";
+import { App } from "../../../bootstrapper";
 
 export function POST({ path, produces = ContenType.TEXT_PLAIN, sealed = false }: { path: string; produces?: ContenType; sealed?: boolean }) {
     //Initialize variables
     let originalMethod: Function;
     let result: any;
     let response: any;
+    let bridge: AuthBridge;
+    let genericDAO: GenericDAO<UserSchema>;
 
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor): any {
         originalMethod = descriptor.value;
@@ -16,7 +23,7 @@ export function POST({ path, produces = ContenType.TEXT_PLAIN, sealed = false }:
         descriptor.value = function (...args: any[]) {
             let finalPath = String(args[0] + path).replace("//", "/");
 
-            result = ServerManager.getInstance().post(finalPath, (req: any, res: any, next: any) => {
+            result = App.serverManager.getInstance().post(finalPath, async (req: any, res: any, next: any) => {
                 //Response reset
                 response = "";
 
@@ -27,18 +34,37 @@ export function POST({ path, produces = ContenType.TEXT_PLAIN, sealed = false }:
                     let token = req.header("px-token");
                     if (token) {
                         try {
-                            if (TokenManager.verify(token) != undefined) {
-                                AbstractController.setMetadata("px-token", req.header("px-token"));
+                            if (!TokenManager.expired(token)) {
+                                genericDAO = new GenericDAO(UserSchema);
+
+                                let n = await genericDAO.count({
+                                    access_token: token
+                                });
+
+                                if(n == 1) {
+                                    AbstractController.setMetadata("px-token", req.header("px-token"));
+                                } else {
+                                    response = {
+                                        msg: "Unauthorized: User not found",
+                                        status: 403
+                                    }
+                                }
+                                
                             }
                         } catch (e) {
-                            response = {
-                                msg: "Error: Malformed access token",
-                                status: 400
+                            if(e.message == "invalid signature") {
+                                response = {
+                                    msg: "Error: Malformed access token",
+                                    status: 400
+                                }
+                            } else {
+                                bridge = new AuthBridge(await pipRetrieverV4(), token);
+                                response = await bridge.response;
                             }
                         }
                     } else {
                         response = {
-                            msg: "Error: Access token required",
+                            msg: "Unauthorized: Access token required",
                             status: 403
                         }
                     }
