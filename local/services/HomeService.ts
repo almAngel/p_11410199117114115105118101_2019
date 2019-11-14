@@ -6,12 +6,15 @@ import { hash, checkHash } from "../helpers/Tools";
 import { AbstractController } from "../controllers/AbstractController";
 import { AuthBundleSchema } from "../schemas/AuthBundleSchema";
 import { v4 as pipRetrieverV4 } from "public-ip";
+import { BucketManager } from "../helpers/BucketManager";
+import config from "../../config.json";
 
 export default class HomeService {
 
     private static requestBody: any;
     private static userDAO: GenericDAO<UserSchema>;
     private static authBundleDAO: GenericDAO<AuthBundleSchema>;
+    private static readonly cfg = config;
 
     private constructor() { }
 
@@ -98,14 +101,17 @@ export default class HomeService {
         databaseManager.disconnect();
 
         return {
-            access_token: access_token
+            access_token: access_token,
+            status: 200
         };
     }
     public static async registerUser() {
-        let response: Promise<any>;
+        let response: any;
         let databaseManager: DatabaseManager;
+        let bucketManager: BucketManager;
 
         databaseManager = new DatabaseManager();
+        bucketManager = new BucketManager();
 
         //Create DAO
         this.userDAO = new GenericDAO(UserSchema);
@@ -117,9 +123,15 @@ export default class HomeService {
 
         response = await this.userDAO.saveOrUpdate(this.requestBody);
 
+        if(response.status != 409) {
+            let responseAux = await this.userDAO.load(this.requestBody);
+
+            bucketManager.createFolder({folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "public/"});
+            bucketManager.createFolder({folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "private/"});
+        }
+
         databaseManager.disconnect();
 
         return response;
     }
-
 }

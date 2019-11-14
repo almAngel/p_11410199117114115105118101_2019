@@ -1,8 +1,12 @@
 {
+    "app": "snap",
     "server_route" : "http://localhost",
     "default_port": 80,
     "database_route": "mongodb://heroku_k7xn6dz2:4q7eu2qd57he4eav5d4jacdah1@ds137008.mlab.com:37008/heroku_k7xn6dz2",
     "database_port": 27017,
     "database_name": "mydb",
-    "controllers_path": "/controllers"
+    "controllers_path": "/controllers",
+    "s3_bucket": "pixcrate",
+    "s3_access": "AKIAIFBOX32ACZGRC7MA",
+    "s3_secret": "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"
 }

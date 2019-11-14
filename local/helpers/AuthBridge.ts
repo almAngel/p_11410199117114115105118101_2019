@@ -55,7 +55,8 @@ export default class AuthBridge extends Observable<any> {
                             }, r.u_id);
 
                             fin = {
-                                access_token: access_token
+                                access_token: access_token,
+                                status: 200
                             }
                         } else {
 

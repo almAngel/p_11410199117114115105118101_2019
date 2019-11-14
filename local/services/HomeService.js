@@ -20,8 +20,11 @@ const Tools_1 = require("../helpers/Tools");
 const AbstractController_1 = require("../controllers/AbstractController");
 const AuthBundleSchema_1 = require("../schemas/AuthBundleSchema");
 const public_ip_1 = require("public-ip");
+const BucketManager_1 = require("../helpers/BucketManager");
+const config_json_1 = __importDefault(require("../../config.json"));
 class HomeService {
-    constructor() { }
+    constructor() {
+    }
     static getAccessToken() {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
@@ -88,15 +91,23 @@ class HomeService {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             let databaseManager;
+            let bucketManager;
             databaseManager = new DatabaseManager_1.DatabaseManager();
+            bucketManager = new BucketManager_1.BucketManager();
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
             this.requestBody = AbstractController_1.AbstractController.metadata("request").body;
             this.requestBody.password = Tools_1.hash(this.requestBody.password);
             response = yield this.userDAO.saveOrUpdate(this.requestBody);
+            if (response.status != 409) {
+                let responseAux = yield this.userDAO.load(this.requestBody);
+                bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "public/" });
+                bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "private/" });
+            }
             databaseManager.disconnect();
             return response;
         });
     }
 }
 exports.default = HomeService;
+HomeService.cfg = config_json_1.default;
 //# sourceMappingURL=HomeService.js.map
