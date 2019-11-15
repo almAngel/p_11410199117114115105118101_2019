@@ -44,11 +44,14 @@ export default class HomeService {
         try {
             matches = checkHash(AbstractController.metadata("request").body.password, response.password);
         } catch (e) {
+            /*
             response = {
-                msg: "Error: Missing required body field",
-                status: 422
+                msg: "Error: User not found",
+                status: 404
             }
+            */
             return response;
+            
         }
 
         if (matches) {
@@ -96,14 +99,21 @@ export default class HomeService {
                 },
                 response._id
             );
+
+            response = {
+                access_token: access_token,
+                status: 200
+            };
+        } else {
+            response = {
+                msg: "Unauthorized: Password doesn't match",
+                status: 401
+            }
         }
 
         databaseManager.disconnect();
 
-        return {
-            access_token: access_token,
-            status: 200
-        };
+        return response;
     }
     public static async registerUser() {
         let response: any;

@@ -52,7 +52,8 @@ class AuthBridge extends rxjs_1.Observable {
                                     access_token: access_token
                                 }, r.u_id);
                                 fin = {
-                                    access_token: access_token
+                                    access_token: access_token,
+                                    status: 200
                                 };
                             }
                             else {

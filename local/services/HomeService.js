@@ -45,10 +45,6 @@ class HomeService {
                 matches = Tools_1.checkHash(AbstractController_1.AbstractController.metadata("request").body.password, response.password);
             }
             catch (e) {
-                response = {
-                    msg: "Error: Missing required body field",
-                    status: 422
-                };
                 return response;
             }
             if (matches) {
@@ -80,11 +76,19 @@ class HomeService {
                 yield this.userDAO.saveOrUpdate({
                     access_token: access_token
                 }, response._id);
+                response = {
+                    access_token: access_token,
+                    status: 200
+                };
+            }
+            else {
+                response = {
+                    msg: "Unauthorized: Password doesn't match",
+                    status: 401
+                };
             }
             databaseManager.disconnect();
-            return {
-                access_token: access_token
-            };
+            return response;
         });
     }
     static registerUser() {
