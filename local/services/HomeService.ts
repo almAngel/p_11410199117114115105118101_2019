@@ -44,14 +44,18 @@ export default class HomeService {
         try {
             matches = checkHash(AbstractController.metadata("request").body.password, response.password);
         } catch (e) {
-            /*
-            response = {
-                msg: "Error: User not found",
-                status: 404
+
+            if (this.requestBody.password == undefined) {
+                response = {
+                    msg: "Error: Password required",
+                    status: 422
+                }
+            } else {
+                return response;
             }
-            */
+
             return response;
-            
+
         }
 
         if (matches) {
@@ -63,7 +67,7 @@ export default class HomeService {
 
             //REF_TOKEN INSIDE TOKEN
             access_token = TokenManager.encode({
-                data: { 
+                data: {
                     ref_token: ref_token
                 },
                 expirationTime: "10min"
@@ -75,7 +79,7 @@ export default class HomeService {
             });
 
             //IF OUR REFRESH TOKEN ALREADY EXISTS -> UPDATE
-            if(aux.status != 404) {
+            if (aux.status != 404) {
                 await this.authBundleDAO.saveOrUpdate(
                     {
                         ref_token: ref_token,
@@ -127,17 +131,34 @@ export default class HomeService {
         this.userDAO = new GenericDAO(UserSchema);
 
         //Retrieve request body
-        this.requestBody = AbstractController.metadata("request").body;
+        this.requestBody = {
+            email: AbstractController.metadata("request").body.email,
+            username: AbstractController.metadata("request").body.username,
+            password: AbstractController.metadata("request").body.password
+        }
 
-        this.requestBody.password = hash(this.requestBody.password);
+        try {
+            this.requestBody.password = hash(this.requestBody.password);
+        } catch (e) {
+
+            if (this.requestBody.password == undefined) {
+                response = {
+                    msg: "Error: Password required",
+                    status: 422
+                }
+            } else {
+                return response;
+            }
+            return response;
+        }
 
         response = await this.userDAO.saveOrUpdate(this.requestBody);
 
-        if(response.status != 409) {
+        if (response.status != 409) {
             let responseAux = await this.userDAO.load(this.requestBody);
 
-            bucketManager.createFolder({folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "public/"});
-            bucketManager.createFolder({folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "private/"});
+            bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "public/" });
+            bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "private/" });
         }
 
         databaseManager.disconnect();

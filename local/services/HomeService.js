@@ -45,6 +45,15 @@ class HomeService {
                 matches = Tools_1.checkHash(AbstractController_1.AbstractController.metadata("request").body.password, response.password);
             }
             catch (e) {
+                if (this.requestBody.password == undefined) {
+                    response = {
+                        msg: "Error: Password required",
+                        status: 422
+                    };
+                }
+                else {
+                    return response;
+                }
                 return response;
             }
             if (matches) {
@@ -99,8 +108,26 @@ class HomeService {
             databaseManager = new DatabaseManager_1.DatabaseManager();
             bucketManager = new BucketManager_1.BucketManager();
             this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
-            this.requestBody = AbstractController_1.AbstractController.metadata("request").body;
-            this.requestBody.password = Tools_1.hash(this.requestBody.password);
+            this.requestBody = {
+                email: AbstractController_1.AbstractController.metadata("request").body.email,
+                username: AbstractController_1.AbstractController.metadata("request").body.username,
+                password: AbstractController_1.AbstractController.metadata("request").body.password
+            };
+            try {
+                this.requestBody.password = Tools_1.hash(this.requestBody.password);
+            }
+            catch (e) {
+                if (this.requestBody.password == undefined) {
+                    response = {
+                        msg: "Error: Password required",
+                        status: 422
+                    };
+                }
+                else {
+                    return response;
+                }
+                return response;
+            }
             response = yield this.userDAO.saveOrUpdate(this.requestBody);
             if (response.status != 409) {
                 let responseAux = yield this.userDAO.load(this.requestBody);
