@@ -67,7 +67,7 @@ class HomeService {
                     expirationTime: "10min"
                 });
                 let aux = yield this.authBundleDAO.load({
-                    u_id: response.id
+                    u_id: response._id
                 });
                 if (aux.status != 404) {
                     yield this.authBundleDAO.saveOrUpdate({

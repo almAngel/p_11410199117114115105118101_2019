@@ -75,7 +75,7 @@ export default class HomeService {
 
             //ASSOCIATE REF_TOKEN AND USER ID
             let aux = await this.authBundleDAO.load({
-                u_id: response.id
+                u_id: response._id
             });
 
             //IF OUR REFRESH TOKEN ALREADY EXISTS -> UPDATE
