@@ -33,8 +33,15 @@ class AuthBridge extends rxjs_1.Observable {
                             public_ip: public_ip
                         });
                         if (r.status == 404) {
-                            fin = {
-                                msg: "Unauthorized: There doesn't exist a token associated with this IP",
+                            genericDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
+                            yield genericDAO.saveOrUpdate({
+                                body: {
+                                    public_ip: public_ip
+                                },
+                                id: r.u_id
+                            });
+                            return {
+                                msg: "Unauthorized: There doesn't exist a token associated with this IP, so on we registered this new IP. Try again.",
                                 status: 403
                             };
                         }
@@ -49,8 +56,11 @@ class AuthBridge extends rxjs_1.Observable {
                                 });
                                 genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
                                 yield genericDAO.saveOrUpdate({
-                                    access_token: access_token
-                                }, r.u_id);
+                                    body: {
+                                        access_token: access_token
+                                    },
+                                    id: r.u_id
+                                });
                                 fin = {
                                     access_token: access_token,
                                     status: 200

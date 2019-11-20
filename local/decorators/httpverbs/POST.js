@@ -21,69 +21,89 @@ const public_ip_1 = require("public-ip");
 const GenericDAO_1 = require("../../schemas/dao/GenericDAO");
 const UserSchema_1 = require("../../schemas/UserSchema");
 const bootstrapper_1 = require("../../../bootstrapper");
-function POST({ path, produces = ContentType_1.ContenType.TEXT_PLAIN, sealed = false }) {
+const body_parser_1 = __importDefault(require("body-parser"));
+const express_formidable_1 = __importDefault(require("express-formidable"));
+function POST({ path, produces = ContentType_1.ContentType.TEXT_PLAIN, consumes = ContentType_1.ContentType.TEXT_PLAIN, sealed = false }) {
     let originalMethod;
     let result;
     let response;
     let bridge;
     let genericDAO;
+    let middleware;
+    let doDummy = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+        response = "";
+        res.setHeader("Content-type", produces);
+        if (sealed) {
+            let token = req.header("px-token");
+            if (token) {
+                try {
+                    if (!TokenManager_1.default.expired(token)) {
+                        genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
+                        let n = yield genericDAO.count({
+                            access_token: token
+                        });
+                        if (n == 1) {
+                            AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
+                        }
+                        else {
+                            response = {
+                                msg: "Unauthorized: User not found",
+                                status: 403
+                            };
+                        }
+                    }
+                }
+                catch (e) {
+                    if (e.message == "invalid signature") {
+                        response = {
+                            msg: "Error: Malformed access token",
+                            status: 400
+                        };
+                    }
+                    else {
+                        bridge = new AuthBridge_1.default(yield public_ip_1.v4(), token);
+                        response = yield bridge.response;
+                    }
+                }
+            }
+            else {
+                response = {
+                    msg: "Unauthorized: Access token required",
+                    status: 403
+                };
+            }
+        }
+        AbstractController_1.AbstractController.setMetadata("request", req);
+        AbstractController_1.AbstractController.setMetadata("response", res);
+        AbstractController_1.AbstractController.setMetadata("urlParams", req.params);
+        AbstractController_1.AbstractController.setMetadata("status", 200);
+        AbstractController_1.AbstractController.setMetadata("next", next);
+        if (response) {
+            Tools_1.handledSend(response);
+        }
+    });
     return function (target, propertyKey, descriptor) {
         originalMethod = descriptor.value;
         descriptor.value = function (...args) {
             let finalPath = String(args[0] + path).replace("//", "/");
-            result = bootstrapper_1.App.serverManager.getInstance().post(finalPath, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-                response = "";
-                res.setHeader("Content-type", produces);
-                if (sealed) {
-                    let token = req.header("px-token");
-                    if (token) {
-                        try {
-                            if (!TokenManager_1.default.expired(token)) {
-                                genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
-                                let n = yield genericDAO.count({
-                                    access_token: token
-                                });
-                                if (n == 1) {
-                                    AbstractController_1.AbstractController.setMetadata("px-token", req.header("px-token"));
-                                }
-                                else {
-                                    response = {
-                                        msg: "Unauthorized: User not found",
-                                        status: 403
-                                    };
-                                }
-                            }
-                        }
-                        catch (e) {
-                            if (e.message == "invalid signature") {
-                                response = {
-                                    msg: "Error: Malformed access token",
-                                    status: 400
-                                };
-                            }
-                            else {
-                                bridge = new AuthBridge_1.default(yield public_ip_1.v4(), token);
-                                response = yield bridge.response;
-                            }
-                        }
-                    }
-                    else {
-                        response = {
-                            msg: "Unauthorized: Access token required",
-                            status: 403
-                        };
-                    }
-                }
-                AbstractController_1.AbstractController.setMetadata("request", req);
-                AbstractController_1.AbstractController.setMetadata("response", res);
-                AbstractController_1.AbstractController.setMetadata("urlParams", req.params);
-                AbstractController_1.AbstractController.setMetadata("status", 200);
-                AbstractController_1.AbstractController.setMetadata("next", next);
-                if (response) {
-                    Tools_1.handledSend(response);
-                }
-                originalMethod.apply(this, args);
-            }));
+            if (consumes == ContentType_1.ContentType.APP_JSON || consumes == undefined) {
+                result = bootstrapper_1.App.serverManager.getInstance().post(finalPath, [body_parser_1.default.json(), body_parser_1.default.urlencoded({ extended: true })], (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+                    yield doDummy(req, res, next);
+                    originalMethod.apply(this, args);
+                }));
+            }
+            else if (consumes == ContentType_1.ContentType.IMAGE_JPEG) {
+                result = bootstrapper_1.App.serverManager.getInstance().post(finalPath, express_formidable_1.default(), (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+                    yield doDummy(req, res, next);
+                    originalMethod.apply(this, args);
+                }));
+            }
+            else {
+                result = bootstrapper_1.App.serverManager.getInstance().post(finalPath, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+                    yield doDummy(req, res, next);
+                    originalMethod.apply(this, args);
+                }));
+            }
         };
         return result;
     };

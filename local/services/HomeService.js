@@ -71,20 +71,28 @@ class HomeService {
                 });
                 if (aux.status != 404) {
                     yield this.authBundleDAO.saveOrUpdate({
-                        ref_token: ref_token,
-                        public_ip: yield public_ip_1.v4()
-                    }, aux._id);
+                        body: {
+                            ref_token: ref_token,
+                            public_ip: yield public_ip_1.v4()
+                        },
+                        id: aux._id
+                    });
                 }
                 else {
                     yield this.authBundleDAO.saveOrUpdate({
-                        ref_token: ref_token,
-                        u_id: response._id,
-                        public_ip: yield public_ip_1.v4()
+                        body: {
+                            ref_token: ref_token,
+                            u_id: response._id,
+                            public_ip: yield public_ip_1.v4()
+                        }
                     });
                 }
                 yield this.userDAO.saveOrUpdate({
-                    access_token: access_token
-                }, response._id);
+                    body: {
+                        access_token: access_token
+                    },
+                    id: response._id
+                });
                 response = {
                     access_token: access_token,
                     status: 200
@@ -128,9 +136,13 @@ class HomeService {
                 }
                 return response;
             }
-            response = yield this.userDAO.saveOrUpdate(this.requestBody);
+            response = yield this.userDAO.saveOrUpdate({
+                body: this.requestBody
+            });
             if (response.status != 409) {
-                let responseAux = yield this.userDAO.load(this.requestBody);
+                let responseAux = yield this.userDAO.load({
+                    body: this.requestBody
+                });
                 bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "public/" });
                 bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "private/" });
             }

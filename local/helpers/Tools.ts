@@ -6,6 +6,7 @@ export function handledSend(arg: any) {
     try {
         if(!AbstractController.metadata("response").headersSent) {
             AbstractController.metadata("response").send(arg);
+            AbstractController.metadata("response").end();
         } else {
             AbstractController.metadata("next")();
         }

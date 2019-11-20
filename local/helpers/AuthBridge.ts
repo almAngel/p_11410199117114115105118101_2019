@@ -29,12 +29,23 @@ export default class AuthBridge extends Observable<any> {
                     });
 
                     if (r.status == 404) {
-                        fin = {
-                            msg: "Unauthorized: There doesn't exist a token associated with this IP",
+
+                        genericDAO = new GenericDAO(AuthBundleSchema);
+                        await genericDAO.saveOrUpdate({
+                            body: {
+                                public_ip: public_ip
+                            },
+                            id: r.u_id
+                        });
+
+                        return {
+                            msg: "Unauthorized: There doesn't exist a token associated with this IP, so on we registered this new IP. Try again.",
                             status: 403
                         }
+                        
 
                     } else {
+
                         let tokenContent = Object(TokenManager.decode(access_token));
 
                         // IF THE USER MAKING THE REQUEST IS THE REAL ONE
@@ -51,15 +62,18 @@ export default class AuthBridge extends Observable<any> {
                             genericDAO = new GenericDAO(UserSchema);
 
                             await genericDAO.saveOrUpdate({
-                                access_token: access_token
-                            }, r.u_id);
+                                body: {
+                                    access_token: access_token
+                                },
+                                id: r.u_id
+                            });
 
                             fin = {
                                 access_token: access_token,
                                 status: 200
                             }
                         } else {
-
+                            
                         }
                     }
                     resolve(fin);

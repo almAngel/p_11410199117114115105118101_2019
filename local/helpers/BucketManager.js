@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const aws_sdk_1 = __importDefault(require("aws-sdk"));
 const config_json_1 = __importDefault(require("../../config.json"));
+const fs_1 = require("fs");
+const Tools_js_1 = require("./Tools.js");
 class BucketManager {
     constructor() {
         this.instance = new aws_sdk_1.default.S3({});
@@ -48,31 +50,85 @@ class BucketManager {
             });
         });
     }
-    uploadFile(folderPath, file, context) {
+    uploadFile({ file, visibility, url, onSuccess, onError }) {
         let response;
-        let reader = new FileReader();
         let fileContent;
+        let reader;
         if (file != undefined) {
-            reader.readAsArrayBuffer(file);
-            fileContent = reader.onload = () => {
-                return reader.result;
-            };
-            this.instance.config.params = {
-                Bucket: BucketManager.cfg.s3_bucket
-            };
-            this.instance.headBucket((err, data) => {
-                if (err)
-                    throw err;
-            });
-            this.instance.putObject({
+            if (file.type == "image/jpeg") {
+                let fileContent = fs_1.readFileSync(file.path);
+                this.instance.config.params = {
+                    Bucket: BucketManager.cfg.s3_bucket
+                };
+                this.instance.headBucket((err, data) => {
+                    if (err)
+                        throw err;
+                });
+                this.instance.putObject({
+                    Bucket: BucketManager.cfg.s3_bucket,
+                    ContentType: "image/jpeg",
+                    Key: url,
+                    Body: fileContent,
+                    ACL: (visibility == "public") ? "public-read" : "",
+                    ServerSideEncryption: "AES256"
+                }, (err, data) => {
+                    if (err)
+                        throw err;
+                })
+                    .on("httpDone", () => {
+                    Tools_js_1.handledSend({
+                        msg: "File uploaded successfully",
+                        status: 201
+                    });
+                    onSuccess(url);
+                }).on("httpError", () => {
+                    Tools_js_1.handledSend({
+                        msg: "Error when uploading file",
+                        status: 500
+                    });
+                    onError();
+                });
+            }
+            else {
+                Tools_js_1.handledSend({
+                    msg: "Error: Unsupported Media Type",
+                    status: 415
+                });
+                onError();
+            }
+        }
+    }
+    deleteFile({ url, onSuccess, onError }) {
+        this.instance.config.params = {
+            Bucket: BucketManager.cfg.s3_bucket
+        };
+        this.instance.headBucket((err, data) => {
+            if (err)
+                throw err;
+        });
+        if (url != undefined) {
+            this.instance.deleteObject({
                 Bucket: BucketManager.cfg.s3_bucket,
-                Key: folderPath + context + "/" + file.name,
-                Body: fileContent,
-                ServerSideEncryption: "AES256"
+                Key: url
             }, (err, data) => {
-                if (err)
+                if (err) {
                     throw err;
+                }
+                else {
+                    onSuccess();
+                }
             });
+            Tools_js_1.handledSend({
+                msg: "File deleted successfully",
+                status: 200
+            });
+        }
+        else {
+            Tools_js_1.handledSend({
+                msg: "Error: You must specify an url",
+                status: 500
+            });
+            onError();
         }
     }
 }

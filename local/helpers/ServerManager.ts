@@ -2,24 +2,22 @@ import express from "express";
 import config from "../../config.json";
 import bodyParser from "body-parser";
 import cors from "cors";
+import formidable from "express-formidable";
 
 export class ServerManager {
     private instance: any;
-    private static readonly cfg = config;    
+    private static readonly cfg = config;
 
     constructor() {
         this.instance = express();
-
-        this.instance.use(bodyParser.json());
-        this.instance.use(bodyParser.urlencoded({ extended: true }));
         this.instance.use(cors());
 
         this.instance.listen(process.env.PORT || ServerManager.cfg.default_port, () => {
             console.log("Server initialized at port " + ServerManager.cfg.server_route + ":" + process.env.PORT || ServerManager.cfg.default_port);
         })
-        .on("error", (e:any) => {
-            console.log("Error: Couldn't start a new server");
-        });
+            .on("error", (e: any) => {
+                console.log("Error: Couldn't start a new server");
+            });
     }
 
     public getInstance() {

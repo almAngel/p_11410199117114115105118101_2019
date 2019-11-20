@@ -44,7 +44,15 @@ class GenericDAO {
             databaseManager = new DatabaseManager_1.DatabaseManager();
             GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
             databaseManager.connect();
-            databaseResponse = yield GenericDAO.model.findById(new mongodb_1.ObjectId(id)).exec();
+            if (mongodb_1.ObjectId.isValid(id)) {
+                databaseResponse = yield GenericDAO.model.findById(id).exec();
+            }
+            else {
+                databaseResponse = {
+                    msg: `Error: Document of type ${this.type.name.replace("Schema", "")} not found`,
+                    status: 404
+                };
+            }
             if (databaseResponse != null) {
                 finalResponse = databaseResponse;
             }
@@ -78,7 +86,7 @@ class GenericDAO {
             return finalResponse;
         });
     }
-    saveOrUpdate(body, id) {
+    saveOrUpdate({ body, id, returnResult }) {
         return __awaiter(this, void 0, void 0, function* () {
             let finalResponse;
             let databaseResponse;
@@ -87,16 +95,29 @@ class GenericDAO {
             GenericDAO.model = require("../models/" + this.type.name.replace("Schema", "Model")).Model;
             databaseManager.connect();
             if (id != undefined) {
-                databaseResponse = yield GenericDAO.model.findByIdAndUpdate(id, body).exec();
-                if (databaseResponse) {
-                    finalResponse = {
-                        msg: `Document of type ${this.type.name.replace("Schema", "")} successfully updated`,
-                        status: 200
-                    };
+                if (mongodb_1.ObjectId.isValid(id)) {
+                    databaseResponse = yield GenericDAO.model.findByIdAndUpdate(id, body).exec();
+                    if (databaseResponse) {
+                        if (returnResult) {
+                            finalResponse = databaseResponse;
+                        }
+                        else {
+                            finalResponse = {
+                                msg: `Document of type ${this.type.name.replace("Schema", "")} successfully updated`,
+                                status: 200
+                            };
+                        }
+                    }
+                    else {
+                        finalResponse = {
+                            msg: `Error: Document of type ${this.type.name.replace("Schema", "")} couldn't be updated`,
+                            status: 404
+                        };
+                    }
                 }
                 else {
                     finalResponse = {
-                        msg: `Error: Document of type ${this.type.name.replace("Schema", "")} couldn't be updated`,
+                        msg: `Error: Document of type ${this.type.name.replace("Schema", "")} not found`,
                         status: 404
                     };
                 }
@@ -104,10 +125,16 @@ class GenericDAO {
             else {
                 try {
                     databaseResponse = yield GenericDAO.model.create(body);
-                    finalResponse = {
-                        msg: `Document of type ${this.type.name.replace("Schema", "")} successfully inserted`,
-                        status: 201
-                    };
+                    if (returnResult) {
+                        finalResponse = databaseResponse;
+                        finalResponse.status = 201;
+                    }
+                    else {
+                        finalResponse = {
+                            msg: `Document of type ${this.type.name.replace("Schema", "")} successfully inserted`,
+                            status: 201
+                        };
+                    }
                 }
                 catch (e) {
                     if (e.code == 11000) {

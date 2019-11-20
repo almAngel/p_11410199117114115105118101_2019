@@ -1,6 +1,5 @@
-
 import { AbstractController } from "./AbstractController";
-import { ContenType } from "../enum/ContentType";
+import { ContentType } from "../enum/ContentType";
 import HomeService from "../services/HomeService";
 import { handledSend } from "../helpers/Tools";
 import { GET } from "../decorators/httpverbs/GET";
@@ -13,28 +12,19 @@ export class HomeController extends AbstractController {
     constructor() {
         super();
     }
-
-    @GET({ path: "/hello", produces: ContenType.APP_JSON, sealed: true })
-    public async hello() {
-        let response;
-        response = {
-            msg: "Hello World!!"
-        }
-        handledSend(response);
-    }
-
-    @POST({ path: "/access", produces: ContenType.APP_JSON})
+    
+    @POST({ path: "/access", produces: ContentType.APP_JSON, consumes: ContentType.APP_JSON })
     public async getAccessToken() {
         let response;
         response = await HomeService.getAccessToken();
-
+        
         handledSend(response);
     }
 
-    @POST({ path: "/new", produces: ContenType.APP_JSON})
+    @POST({ path: "/new", produces: ContentType.APP_JSON, consumes: ContentType.APP_JSON })
     public async register() {
         let response;
-
+        
         response = await HomeService.registerUser();
 
         handledSend(response);

@@ -42,9 +42,9 @@ export default class HomeService {
         });
 
         try {
+            
             matches = checkHash(AbstractController.metadata("request").body.password, response.password);
         } catch (e) {
-
             if (this.requestBody.password == undefined) {
                 response = {
                     msg: "Error: Password required",
@@ -59,7 +59,7 @@ export default class HomeService {
         }
 
         if (matches) {
-
+            
             //REF_TOKEN
             ref_token = TokenManager.encode({
                 data: {}
@@ -80,29 +80,29 @@ export default class HomeService {
 
             //IF OUR REFRESH TOKEN ALREADY EXISTS -> UPDATE
             if (aux.status != 404) {
-                await this.authBundleDAO.saveOrUpdate(
-                    {
+                await this.authBundleDAO.saveOrUpdate({
+                    body: {
                         ref_token: ref_token,
                         public_ip: await pipRetrieverV4()
                     },
-                    aux._id
-                );
+                    id: aux._id
+                });
             } else { //IF NOT, CREATE A NEW ONE
-                await this.authBundleDAO.saveOrUpdate(
-                    {
+                await this.authBundleDAO.saveOrUpdate({
+                    body: {
                         ref_token: ref_token,
                         u_id: response._id,
                         public_ip: await pipRetrieverV4()
                     }
-                );
+                });
             }
 
-            await this.userDAO.saveOrUpdate(
-                {
+            await this.userDAO.saveOrUpdate({
+                body: {
                     access_token: access_token
                 },
-                response._id
-            );
+                id: response._id
+            });
 
             response = {
                 access_token: access_token,
@@ -135,8 +135,8 @@ export default class HomeService {
             email: AbstractController.metadata("request").body.email,
             username: AbstractController.metadata("request").body.username,
             password: AbstractController.metadata("request").body.password
-        }
-
+        }       
+        
         try {
             this.requestBody.password = hash(this.requestBody.password);
         } catch (e) {
@@ -152,10 +152,14 @@ export default class HomeService {
             return response;
         }
 
-        response = await this.userDAO.saveOrUpdate(this.requestBody);
+        response = await this.userDAO.saveOrUpdate({
+            body: this.requestBody
+        });
 
         if (response.status != 409) {
-            let responseAux = await this.userDAO.load(this.requestBody);
+            let responseAux = await this.userDAO.load({
+                body: this.requestBody
+            });
 
             bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "public/" });
             bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "private/" });

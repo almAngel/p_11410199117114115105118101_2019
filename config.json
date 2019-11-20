@@ -7,6 +7,7 @@
     "database_name": "mydb",
     "controllers_path": "/controllers",
     "s3_bucket": "pixcrate",
+    "s3_region": "eu-west-3",
     "s3_access": "AKIAIFBOX32ACZGRC7MA",
     "s3_secret": "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"
 }

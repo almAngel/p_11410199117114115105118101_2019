@@ -17,50 +17,75 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const AbstractController_1 = require("./AbstractController");
 const ContentType_1 = require("../enum/ContentType");
-const HomeService_1 = __importDefault(require("../services/HomeService"));
 const Tools_1 = require("../helpers/Tools");
+const GET_1 = require("../decorators/httpverbs/GET");
 const POST_1 = require("../decorators/httpverbs/POST");
 const RestController_1 = require("../decorators/RestController");
-let HomeController = class HomeController extends AbstractController_1.AbstractController {
+const ImageService_1 = require("../services/ImageService");
+const DELETE_1 = require("../decorators/httpverbs/DELETE");
+const PUT_1 = require("../decorators/httpverbs/PUT");
+let ImageController = class ImageController extends AbstractController_1.AbstractController {
     constructor() {
         super();
     }
-    getAccessToken() {
+    upload() {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
-            response = yield HomeService_1.default.getAccessToken();
+            ImageService_1.ImageService.upload();
+        });
+    }
+    getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            response = yield ImageService_1.ImageService.getAllImages();
             Tools_1.handledSend(response);
         });
     }
-    register() {
+    delete() {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
-            response = yield HomeService_1.default.registerUser();
+            response = yield ImageService_1.ImageService.deleteImage();
+            Tools_1.handledSend(response);
+        });
+    }
+    update() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            response = yield ImageService_1.ImageService.updateImage();
             Tools_1.handledSend(response);
         });
     }
 };
 __decorate([
-    POST_1.POST({ path: "/access", produces: ContentType_1.ContentType.APP_JSON, consumes: ContentType_1.ContentType.APP_JSON }),
+    POST_1.POST({ path: "/new", produces: ContentType_1.ContentType.APP_JSON, consumes: ContentType_1.ContentType.IMAGE_JPEG, sealed: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], HomeController.prototype, "getAccessToken", null);
+], ImageController.prototype, "upload", null);
 __decorate([
-    POST_1.POST({ path: "/new", produces: ContentType_1.ContentType.APP_JSON, consumes: ContentType_1.ContentType.APP_JSON }),
+    GET_1.GET({ path: "/all", produces: ContentType_1.ContentType.APP_JSON, consumes: ContentType_1.ContentType.APP_JSON, sealed: true }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], HomeController.prototype, "register", null);
-HomeController = __decorate([
-    RestController_1.RestController("/home"),
+], ImageController.prototype, "getAll", null);
+__decorate([
+    DELETE_1.DELETE({ path: "/:id", produces: ContentType_1.ContentType.APP_JSON, sealed: true }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ImageController.prototype, "delete", null);
+__decorate([
+    PUT_1.PUT({ path: "/:id", produces: ContentType_1.ContentType.APP_JSON, consumes: ContentType_1.ContentType.APP_JSON, sealed: true }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ImageController.prototype, "update", null);
+ImageController = __decorate([
+    RestController_1.RestController("/image"),
     __metadata("design:paramtypes", [])
-], HomeController);
-exports.HomeController = HomeController;
-//# sourceMappingURL=HomeController.js.map
+], ImageController);
+exports.ImageController = ImageController;
+//# sourceMappingURL=ImageController.js.map
