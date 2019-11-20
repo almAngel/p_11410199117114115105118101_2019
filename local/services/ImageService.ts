@@ -43,7 +43,7 @@ export class ImageService {
             }
         );
 
-        if (!TokenManager.expired(tokenAux)) {
+        if (!TokenManager.expired(tokenAux) && response.status != 404) {
             //FIRST, CREATE THE RESOURCE INSIDE OUR DATABASE
             responseAux = await this.imageDAO.saveOrUpdate({
                 body: {
@@ -104,7 +104,7 @@ export class ImageService {
             }
         );
 
-        if (!TokenManager.expired(tokenAux)) {
+        if (!TokenManager.expired(tokenAux) && response.status != 404) {
             responseAux = await this.imageDAO.loadGroup(
                 {
                     u_id: response.u_id,
@@ -142,7 +142,13 @@ export class ImageService {
         let tokenAux = AbstractController.metadata("request").header("px-token");
         let refToken = Object(TokenManager.decode(tokenAux)).ref_token;
         
-        if (!TokenManager.expired(tokenAux)) {
+        response = await this.authBundleDAO.load(
+            {
+                ref_token: refToken
+            }
+        );
+
+        if (!TokenManager.expired(tokenAux) && response.status != 404) {
 
             responseAux = await this.imageDAO.loadById(
                 AbstractController.metadata("urlParams").id
@@ -181,7 +187,13 @@ export class ImageService {
         let tokenAux = AbstractController.metadata("request").header("px-token");
         let refToken = Object(TokenManager.decode(tokenAux)).ref_token;
         
-        if (!TokenManager.expired(tokenAux)) {
+        response = await this.authBundleDAO.load(
+            {
+                ref_token: refToken
+            }
+        );
+
+        if (!TokenManager.expired(tokenAux) && response.status != 404) {
 
             response = await this.imageDAO.saveOrUpdate({
                 body: {

@@ -40,7 +40,7 @@ class ImageService {
             response = yield this.authBundleDAO.load({
                 ref_token: refToken
             });
-            if (!TokenManager_1.default.expired(tokenAux)) {
+            if (!TokenManager_1.default.expired(tokenAux) && response.status != 404) {
                 responseAux = yield this.imageDAO.saveOrUpdate({
                     body: {
                         u_id: response.u_id,
@@ -84,7 +84,7 @@ class ImageService {
             response = yield this.authBundleDAO.load({
                 ref_token: refToken
             });
-            if (!TokenManager_1.default.expired(tokenAux)) {
+            if (!TokenManager_1.default.expired(tokenAux) && response.status != 404) {
                 responseAux = yield this.imageDAO.loadGroup({
                     u_id: response.u_id,
                 });
@@ -112,7 +112,10 @@ class ImageService {
             this.authBundleDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
             let tokenAux = AbstractController_1.AbstractController.metadata("request").header("px-token");
             let refToken = Object(TokenManager_1.default.decode(tokenAux)).ref_token;
-            if (!TokenManager_1.default.expired(tokenAux)) {
+            response = yield this.authBundleDAO.load({
+                ref_token: refToken
+            });
+            if (!TokenManager_1.default.expired(tokenAux) && response.status != 404) {
                 responseAux = yield this.imageDAO.loadById(AbstractController_1.AbstractController.metadata("urlParams").id);
                 if (responseAux.status != 404) {
                     let preparedUrl = responseAux.url.slice(responseAux.url.indexOf(".com/") + ".com/".length, responseAux.url.length);
@@ -139,7 +142,10 @@ class ImageService {
             this.authBundleDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
             let tokenAux = AbstractController_1.AbstractController.metadata("request").header("px-token");
             let refToken = Object(TokenManager_1.default.decode(tokenAux)).ref_token;
-            if (!TokenManager_1.default.expired(tokenAux)) {
+            response = yield this.authBundleDAO.load({
+                ref_token: refToken
+            });
+            if (!TokenManager_1.default.expired(tokenAux) && response.status != 404) {
                 response = yield this.imageDAO.saveOrUpdate({
                     body: {
                         description: AbstractController_1.AbstractController.metadata("request").body.description,
