@@ -96,17 +96,17 @@ export function GET({ path, produces = ContentType.TEXT_PLAIN, consumes = Conten
             */
 
             if (consumes == ContentType.APP_JSON || consumes == undefined) {
-                result = App.serverManager.getInstance().get(finalPath, [bodyParser.json(), bodyParser.urlencoded({ extended: true })], async (req: any, res: any, next: any) => {
+                result = new App().serverManager.getInstance().get(finalPath, [bodyParser.json(), bodyParser.urlencoded({ extended: true })], async (req: any, res: any, next: any) => {
                     await doDummy(req, res, next);
                     originalMethod.apply(this, args);
                 });
             } else if (consumes == ContentType.IMAGE_JPEG) {
-                result = App.serverManager.getInstance().get(finalPath, formidable(), async (req: any, res: any, next: any) => {
+                result = new App().serverManager.getInstance().get(finalPath, formidable(), async (req: any, res: any, next: any) => {
                     await doDummy(req, res, next);
                     originalMethod.apply(this, args);
                 });
             } else {
-                result = App.serverManager.getInstance().get(finalPath, async (req: any, res: any, next: any) => {
+                result = new App().serverManager.getInstance().get(finalPath, async (req: any, res: any, next: any) => {
                     await doDummy(req, res, next);
                     originalMethod.apply(this, args);
                 });

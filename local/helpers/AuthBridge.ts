@@ -31,12 +31,14 @@ export default class AuthBridge extends Observable<any> {
                     if (r.status == 404) {
 
                         genericDAO = new GenericDAO(AuthBundleSchema);
+                        /*
                         await genericDAO.saveOrUpdate({
                             body: {
                                 public_ip: public_ip
                             },
                             id: r.u_id
                         });
+                        */
 
                         return {
                             msg: "Unauthorized: There doesn't exist a token associated with this IP, so on we registered this new IP. Try again.",

@@ -86,18 +86,18 @@ export function PUT({ path, produces = ContentType.TEXT_PLAIN, consumes = Conten
             let finalPath = String(args[0] + path).replace("//", "/");
 
             if (consumes == ContentType.APP_JSON || consumes == undefined) {
-                result = App.serverManager.getInstance().put(finalPath, [bodyParser.json(), bodyParser.urlencoded({ extended: true })], async (req: any, res: any, next: any) => {
+                result = new App().serverManager.getInstance().put(finalPath, [bodyParser.json(), bodyParser.urlencoded({ extended: true })], async (req: any, res: any, next: any) => {
                     await doDummy(req, res, next);
                     originalMethod.apply(this, args);
                 });
             } else if (consumes == ContentType.IMAGE_JPEG) {
 
-                result = App.serverManager.getInstance().put(finalPath, formidable(), async (req: any, res: any, next: any) => {
+                result = new App().serverManager.getInstance().put(finalPath, formidable(), async (req: any, res: any, next: any) => {
                     await doDummy(req, res, next);
                     originalMethod.apply(this, args);
                 });
             } else {
-                result = App.serverManager.getInstance().put(finalPath, async (req: any, res: any, next: any) => {
+                result = new App().serverManager.getInstance().put(finalPath, async (req: any, res: any, next: any) => {
                     await doDummy(req, res, next);
                     originalMethod.apply(this, args);
                 });
