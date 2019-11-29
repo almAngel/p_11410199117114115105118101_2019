@@ -30,7 +30,7 @@ __decorate([
     __metadata("design:type", Object)
 ], AuthBundleSchema.prototype, "u_id", void 0);
 __decorate([
-    Requirements_1.Requirements({ required: true, unique: true, type: String }),
+    Requirements_1.Requirements({ required: true, type: String }),
     __metadata("design:type", Object)
 ], AuthBundleSchema.prototype, "public_ip", void 0);
 __decorate([

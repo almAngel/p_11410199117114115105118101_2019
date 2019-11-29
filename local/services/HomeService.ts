@@ -88,6 +88,7 @@ export default class HomeService {
                     id: aux._id
                 });
             } else { //IF NOT, CREATE A NEW ONE
+                
                 await this.authBundleDAO.saveOrUpdate({
                     body: {
                         ref_token: ref_token,
@@ -95,6 +96,7 @@ export default class HomeService {
                         public_ip: await pipRetrieverV4()
                     }
                 });
+                
             }
 
             await this.userDAO.saveOrUpdate({
@@ -115,7 +117,7 @@ export default class HomeService {
             }
         }
 
-        databaseManager.disconnect();
+        //databaseManager.disconnect();
 
         return response;
     }
@@ -165,7 +167,7 @@ export default class HomeService {
             bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "private/" });
         }
 
-        databaseManager.disconnect();
+        //databaseManager.disconnect();
 
         return response;
     }

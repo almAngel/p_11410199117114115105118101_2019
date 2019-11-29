@@ -104,7 +104,6 @@ class HomeService {
                     status: 401
                 };
             }
-            databaseManager.disconnect();
             return response;
         });
     }
@@ -146,7 +145,6 @@ class HomeService {
                 bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "public/" });
                 bucketManager.createFolder({ folderPath: responseAux._id + "/" + HomeService.cfg.app + "/" + "private/" });
             }
-            databaseManager.disconnect();
             return response;
         });
     }
