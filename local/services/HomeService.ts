@@ -70,7 +70,7 @@ export default class HomeService {
                 data: {
                     ref_token: ref_token
                 },
-                expirationTime: "10min"
+                expirationTime: "1d"
             });
 
             //ASSOCIATE REF_TOKEN AND USER ID
