@@ -97,18 +97,18 @@ export function POST({ path, produces = ContentType.TEXT_PLAIN, consumes = Conte
             */
 
             if (consumes == ContentType.APP_JSON || consumes == undefined ) {
-                result = new App().serverManager.getInstance().post(finalPath, [bodyParser.json(), bodyParser.urlencoded({ extended: true })], async (req: any, res: any, next: any) => {
+                result = App.serverManager.getInstance().post(finalPath, [bodyParser.json(), bodyParser.urlencoded({ extended: true })], async (req: any, res: any, next: any) => {
                     await doDummy(req, res, next);
                     originalMethod.apply(this, args);
                 });
             } else if (consumes == ContentType.IMAGE_JPEG) {
 
-                result = new App().serverManager.getInstance().post(finalPath, formidable(), async (req: any, res: any, next: any) => {
+                result = App.serverManager.getInstance().post(finalPath, formidable(), async (req: any, res: any, next: any) => {
                     await doDummy(req, res, next);
                     originalMethod.apply(this, args);
                 });
             } else {
-                result = new App().serverManager.getInstance().post(finalPath, async (req: any, res: any, next: any) => {
+                result = App.serverManager.getInstance().post(finalPath, async (req: any, res: any, next: any) => {
                     await doDummy(req, res, next);
                     originalMethod.apply(this, args);
                 });
