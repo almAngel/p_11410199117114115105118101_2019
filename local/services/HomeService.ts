@@ -42,7 +42,7 @@ export default class HomeService {
         });
 
         try {
-            
+
             matches = checkHash(AbstractController.metadata("request").body.password, response.password);
         } catch (e) {
             if (this.requestBody.password == undefined) {
@@ -59,7 +59,7 @@ export default class HomeService {
         }
 
         if (matches) {
-            
+
             //REF_TOKEN
             ref_token = TokenManager.encode({
                 data: {}
@@ -135,8 +135,8 @@ export default class HomeService {
             email: AbstractController.metadata("request").body.email,
             username: AbstractController.metadata("request").body.username,
             password: AbstractController.metadata("request").body.password
-        }       
-        
+        }
+
         try {
             this.requestBody.password = hash(this.requestBody.password);
         } catch (e) {
@@ -168,5 +168,40 @@ export default class HomeService {
         databaseManager.disconnect();
 
         return response;
+    }
+    public static async destroySession() {
+        let response: any;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
+
+        //Create DAO
+        this.userDAO = new GenericDAO(UserSchema);
+        this.authBundleDAO = new GenericDAO(AuthBundleSchema);
+
+        let token = AbstractController.metadata("request").header("px-token");
+        let refToken = Object(TokenManager.decode(token)).ref_token;
+
+        response = await this.authBundleDAO.load({
+            ref_token: refToken
+        });
+
+        if (response._id != undefined) {
+            response = await this.authBundleDAO.delete(response._id);
+
+            databaseManager.disconnect();
+            return {
+                msg: "User logged out successfully",
+                status: 200
+            }
+        } else {
+            databaseManager.disconnect();
+            return {
+                msg: "Couldn't log out. User not logged in",
+                status: 404
+            }
+        }
+
+        
     }
 }

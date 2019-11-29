@@ -150,6 +150,35 @@ class HomeService {
             return response;
         });
     }
+    static destroySession() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
+            this.userDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
+            this.authBundleDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
+            let token = AbstractController_1.AbstractController.metadata("request").header("px-token");
+            let refToken = Object(TokenManager_1.default.decode(token)).ref_token;
+            response = yield this.authBundleDAO.load({
+                ref_token: refToken
+            });
+            if (response._id != undefined) {
+                response = yield this.authBundleDAO.delete(response._id);
+                databaseManager.disconnect();
+                return {
+                    msg: "User logged out successfully",
+                    status: 200
+                };
+            }
+            else {
+                databaseManager.disconnect();
+                return {
+                    msg: "Couldn't log out. User not logged in",
+                    status: 404
+                };
+            }
+        });
+    }
 }
 exports.default = HomeService;
 HomeService.cfg = config_json_1.default;

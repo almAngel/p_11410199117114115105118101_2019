@@ -27,6 +27,7 @@ const HomeService_1 = __importDefault(require("../services/HomeService"));
 const Tools_1 = require("../helpers/Tools");
 const POST_1 = require("../decorators/httpverbs/POST");
 const RestController_1 = require("../decorators/RestController");
+const DELETE_1 = require("../decorators/httpverbs/DELETE");
 let HomeController = class HomeController extends AbstractController_1.AbstractController {
     constructor() {
         super();
@@ -45,6 +46,13 @@ let HomeController = class HomeController extends AbstractController_1.AbstractC
             Tools_1.handledSend(response);
         });
     }
+    logout() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            response = yield HomeService_1.default.destroySession();
+            Tools_1.handledSend(response);
+        });
+    }
 };
 __decorate([
     POST_1.POST({ path: "/access", produces: ContentType_1.ContentType.APP_JSON, consumes: ContentType_1.ContentType.APP_JSON }),
@@ -58,6 +66,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], HomeController.prototype, "register", null);
+__decorate([
+    DELETE_1.DELETE({ path: "/end", produces: ContentType_1.ContentType.APP_JSON, consumes: ContentType_1.ContentType.APP_JSON, sealed: true }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], HomeController.prototype, "logout", null);
 HomeController = __decorate([
     RestController_1.RestController("/home"),
     __metadata("design:paramtypes", [])
