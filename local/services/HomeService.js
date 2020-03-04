@@ -64,7 +64,7 @@ class HomeService {
                     data: {
                         ref_token: ref_token
                     },
-                    expirationTime: "10min"
+                    expirationTime: "1d"
                 });
                 let aux = yield this.authBundleDAO.load({
                     u_id: response._id

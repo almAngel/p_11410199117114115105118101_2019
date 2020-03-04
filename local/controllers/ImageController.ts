@@ -29,6 +29,13 @@ export class ImageController extends AbstractController {
         handledSend(response);
     }
 
+    @GET({ path: "/all-public", produces: ContentType.APP_JSON, consumes: ContentType.APP_JSON, sealed: true })
+    public async getAllPublic() {
+        let response;
+        response = await ImageService.getAllPublicImages();
+        handledSend(response);
+    }
+
     @DELETE({ path: "/:id", produces: ContentType.APP_JSON, sealed: true })
     public async delete() {
         let response;

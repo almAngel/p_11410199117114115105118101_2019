@@ -46,7 +46,7 @@ class AuthBridge extends rxjs_1.Observable {
                                     data: {
                                         ref_token: r.ref_token
                                     },
-                                    expirationTime: '10min'
+                                    expirationTime: '1d'
                                 });
                                 genericDAO = new GenericDAO_1.GenericDAO(UserSchema_1.UserSchema);
                                 yield genericDAO.saveOrUpdate({

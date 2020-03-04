@@ -44,6 +44,13 @@ let ImageController = class ImageController extends AbstractController_1.Abstrac
             Tools_1.handledSend(response);
         });
     }
+    getAllPublic() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response;
+            response = yield ImageService_1.ImageService.getAllPublicImages();
+            Tools_1.handledSend(response);
+        });
+    }
     delete() {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
@@ -71,6 +78,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ImageController.prototype, "getAll", null);
+__decorate([
+    GET_1.GET({ path: "/all-public", produces: ContentType_1.ContentType.APP_JSON, consumes: ContentType_1.ContentType.APP_JSON, sealed: true }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ImageController.prototype, "getAllPublic", null);
 __decorate([
     DELETE_1.DELETE({ path: "/:id", produces: ContentType_1.ContentType.APP_JSON, sealed: true }),
     __metadata("design:type", Function),

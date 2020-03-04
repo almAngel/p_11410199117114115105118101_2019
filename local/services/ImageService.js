@@ -101,6 +101,35 @@ class ImageService {
             return response;
         });
     }
+    static getAllPublicImages() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let response, responseAux;
+            let databaseManager;
+            databaseManager = new DatabaseManager_1.DatabaseManager();
+            this.imageDAO = new GenericDAO_1.GenericDAO(ImageSchema_1.ImageSchema);
+            this.authBundleDAO = new GenericDAO_1.GenericDAO(AuthBundleSchema_1.AuthBundleSchema);
+            let tokenAux = AbstractController_1.AbstractController.metadata("request").header("px-token");
+            let refToken = Object(TokenManager_1.default.decode(tokenAux)).ref_token;
+            response = yield this.authBundleDAO.load({
+                ref_token: refToken
+            });
+            if (!TokenManager_1.default.expired(tokenAux) && response.status != 404) {
+                responseAux = yield this.imageDAO.loadGroup({
+                    visibility: "public",
+                });
+            }
+            response = [];
+            responseAux.forEach((e, i) => {
+                response.push({
+                    _id: e._id,
+                    description: e.description,
+                    visibility: e.visibility,
+                    url: e.url
+                });
+            });
+            return response;
+        });
+    }
     static deleteImage() {
         return __awaiter(this, void 0, void 0, function* () {
             let response, responseAux;

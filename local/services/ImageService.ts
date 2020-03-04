@@ -7,7 +7,6 @@ import { BucketManager } from "../helpers/BucketManager";
 import TokenManager from "../helpers/TokenManager";
 import config from "../../config.json";
 import { handledSend } from "../helpers/Tools";
-import { ObjectId } from "bson";
 
 export class ImageService {
 
@@ -108,6 +107,48 @@ export class ImageService {
             responseAux = await this.imageDAO.loadGroup(
                 {
                     u_id: response.u_id,
+                },
+            );
+
+        }
+
+        response = [];
+        responseAux.forEach((e: any, i: number) => {
+            response.push({
+                _id: e._id,
+                description: e.description,
+                visibility: e.visibility,
+                url: e.url
+            });
+        });
+
+
+        return response;
+    }
+
+    public static async getAllPublicImages() {
+        let response: any, responseAux: any;
+        let databaseManager: DatabaseManager;
+
+        databaseManager = new DatabaseManager();
+
+        //Create DAO
+        this.imageDAO = new GenericDAO(ImageSchema);
+        this.authBundleDAO = new GenericDAO(AuthBundleSchema);
+
+        let tokenAux = AbstractController.metadata("request").header("px-token");
+        let refToken = Object(TokenManager.decode(tokenAux)).ref_token;
+
+        response = await this.authBundleDAO.load(
+            {
+                ref_token: refToken
+            }
+        );
+
+        if (!TokenManager.expired(tokenAux) && response.status != 404) {
+            responseAux = await this.imageDAO.loadGroup(
+                {
+                    visibility: "public",
                 },
             );
 
